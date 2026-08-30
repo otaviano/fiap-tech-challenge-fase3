@@ -144,3 +144,23 @@ def test_dedup_key_preserva_casos_distintos_de_mesmo_formato():
     aprovados, relatorio = curate(exemplos)
     assert len(aprovados) == 2, "casos distintos foram descartados como quase-duplicata"
     assert relatorio.descartes["duplicata_exata"] == 1
+
+
+def test_dataset_cobre_os_dois_caminhos_do_fluxo(db):
+    """O grafo tem caminho com e sem prontuário; o treino precisa dos dois.
+
+    Regressão da rodada v4: treinado só com consultas contextualizadas, o modelo
+    aplicou o formato 'Resumo do caso' a uma pergunta geral e inventou o paciente.
+    """
+    from med_assist.data import contextualized
+
+    com_paciente = contextualized.gerar(n_pacientes=2, perguntas_por_paciente=1)
+    sem_paciente = contextualized.gerar_consulta_geral()
+
+    assert com_paciente and sem_paciente
+    assert all("### Contexto do paciente" in e["pergunta"] for e in com_paciente)
+    assert all("### Contexto do paciente" not in e["pergunta"] for e in sem_paciente)
+    assert all("### Trechos de protocolo recuperados" in e["pergunta"] for e in sem_paciente)
+    # A resposta de referência da consulta geral não fala de um caso concreto.
+    assert all("Resumo do caso" not in e["resposta"] for e in sem_paciente)
+    assert all("PROT-" in e["resposta"] for e in sem_paciente)

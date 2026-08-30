@@ -1,7 +1,7 @@
 {
-  "exemplos_brutos": 437,
+  "exemplos_brutos": 457,
   "anonimizacao": {
-    "documentos_processados": 486,
+    "documentos_processados": 526,
     "identificadores_removidos": 404,
     "por_tipo": {
       "PRONTUARIO": 144,
@@ -17,8 +17,8 @@
     }
   },
   "curadoria": {
-    "exemplos_de_entrada": 437,
-    "exemplos_aprovados": 429,
+    "exemplos_de_entrada": 457,
+    "exemplos_aprovados": 449,
     "descartados": 8,
     "motivos_de_descarte": {
       "duplicata_exata": 8
@@ -26,6 +26,7 @@
     "aprovados_por_categoria": {
       "conhecimento_geral": 195,
       "consulta_contextualizada": 43,
+      "consulta_geral": 20,
       "documento": 24,
       "faq": 20,
       "faq_contextualizada": 12,
@@ -33,8 +34,8 @@
       "protocolo_qa": 120
     }
   },
-  "treino": 365,
-  "validacao": 64,
+  "treino": 382,
+  "validacao": 67,
   "arquivos": {
     "treino": "data/processed/train.jsonl",
     "validacao": "data/processed/val.jsonl",

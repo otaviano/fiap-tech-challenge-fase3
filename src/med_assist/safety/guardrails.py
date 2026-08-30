@@ -235,3 +235,35 @@ def check_citations(resposta: str, protocolos_recuperados: set[str]) -> list[str
     # A mesma citação errada costuma aparecer várias vezes na mesma resposta;
     # a auditoria registra o problema, não a contagem de repetições.
     return list(dict.fromkeys(motivos))
+
+
+#: Afirmações que só fazem sentido quando há um paciente no contexto.
+PADRAO_AFIRMA_PACIENTE = re.compile(
+    r"paciente\s+d[eo]\s+\d{1,3}\s*anos|resumo\s+do\s+caso|prontu[áa]rio\s+PRT-\d{4}-\d{6}|"
+    r"leito\s+[A-Z]-\d{2}", re.I)
+
+#: Código com cara de protocolo institucional, mas fora do padrão `PROT-XXX-000`.
+# O lookbehind impede casar o sufixo de um código válido: em `PROT-PNE-006`, o
+# trecho `PNE-006` tem um hífen antes e não conta como código próprio.
+PADRAO_CODIGO_MALFORMADO = re.compile(r"\b(?<![A-Z-])(?!PROT-)[A-Z]{3,6}-\d{3}\b")
+
+
+def check_hallucinated_context(resposta: str, tem_paciente: bool) -> list[str]:
+    """Detecta caso clínico inventado e código de protocolo fabricado.
+
+    Medido na rodada v4: numa consulta **sem prontuário**, o modelo abriu com
+    "Paciente de 60 anos, homem" e citou "(PRONE-006)" — paciente e código
+    inexistentes, em texto com aparência perfeitamente institucional. Nenhuma das
+    verificações anteriores pegava: não havia PII, havia citação, e o código
+    fabricado não casa com o padrão de protocolo real justamente por ser falso.
+    """
+    motivos: list[str] = []
+
+    if not tem_paciente and PADRAO_AFIRMA_PACIENTE.search(resposta):
+        motivos.append("paciente_inexistente_na_resposta")
+
+    malformados = set(PADRAO_CODIGO_MALFORMADO.findall(resposta))
+    if malformados:
+        motivos.append("codigo_de_protocolo_malformado:" + ",".join(sorted(malformados)))
+
+    return motivos

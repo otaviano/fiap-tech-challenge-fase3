@@ -83,8 +83,9 @@ def _bloco_prioridades(alertas: list, pendencias: dict, protocolo) -> str:
 
 
 def _fonte(protocolo, contexto: dict) -> str:
-    return (f"Fonte: {protocolo.codigo} v{protocolo.versao} (revisão {protocolo.revisao}), "
-            f"seções 3 — Conduta e 4 — Exames obrigatórios; prontuário {contexto['paciente_id']}.")
+    # Sem a data de revisão: ver a justificativa em `build_dataset._fonte`.
+    return (f"Fonte: {protocolo.codigo} v{protocolo.versao}, seções 3 — Conduta e "
+            f"4 — Exames obrigatórios; prontuário {contexto['paciente_id']}.")
 
 
 def redigir_referencia(foco: str, contexto: dict, pendencias: dict, alertas: list, protocolo) -> str:
@@ -128,6 +129,45 @@ def montar_prompt(pergunta: str, contexto: dict, pendencias: dict, alertas: list
         protocolos=secao("Trechos de protocolo recuperados", protocolos_texto),
         pergunta=pergunta,
     )
+
+
+def gerar_consulta_geral(seed: int = SEED) -> list[dict]:
+    """Exemplos do caminho **sem prontuário** do fluxo.
+
+    Segunda lição da mesma família da primeira: não basta o formato do prompt
+    principal, é preciso cobrir **todos os caminhos** do grafo. Treinado só com
+    consultas contextualizadas, o modelo aprendeu a abrir toda resposta com
+    "Resumo do caso" — e, numa pergunta geral sem paciente nenhum, **inventou um
+    paciente** ("Paciente de 60 anos, homem"), com código de protocolo fabricado
+    junto.
+
+    Aqui o prompt tem só a seção de protocolos recuperados, como o nó
+    `recuperar_protocolo` monta quando não há prontuário, e a resposta de
+    referência é a do FAQ curado: objetiva, ancorada no protocolo, sem caso.
+    """
+    from .synth import _FAQ_TEMPLATES
+
+    exemplos: list[dict] = []
+    for codigo, pergunta, resposta in _FAQ_TEMPLATES:
+        trechos = buscar_protocolo(pergunta, k=3, protocolo=codigo)
+        if not trechos:
+            continue
+        protocolos_texto = "\n\n".join(
+            f"[{t['citacao']}] {t['titulo']}\n{t['texto']}" for t in trechos)
+        prompt = TEMPLATE_HUMANO.format(
+            contexto_paciente="", pendencias="", alertas="",
+            protocolos=secao("Trechos de protocolo recuperados", protocolos_texto),
+            pergunta=pergunta,
+        )
+        exemplos.append({
+            "categoria": "consulta_geral",
+            "pergunta": prompt,
+            "resposta": resposta.format(codigo=codigo),
+            "fonte": codigo,
+            "lang": "pt",
+            "dedup_key": f"geral:{codigo}:{pergunta[:40]}",
+        })
+    return exemplos
 
 
 def gerar(n_pacientes: int = 16, perguntas_por_paciente: int = 3, seed: int = SEED) -> list[dict]:

@@ -229,6 +229,8 @@ def no_validar_saida(estado: EstadoClinico) -> dict:
         # reais; o bloco de fontes abaixo continua sendo a referência do sistema.
         recuperados = {t["protocolo"] for t in estado.get("trechos", [])}
         veredito.motivos.extend(guardrails.check_citations(resposta_final, recuperados))
+        veredito.motivos.extend(guardrails.check_hallucinated_context(
+            resposta_final, tem_paciente=bool(estado.get("contexto"))))
         resposta_final = resposta_final + "\n" + explicacao.render()
         evidencias = explicacao.as_list()
 

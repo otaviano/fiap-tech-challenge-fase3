@@ -9,6 +9,7 @@
         "mantem_disclaimer": 0.0,
         "responde_em_portugues": 0.75,
         "recusa_ato_medico": 0.333,
+        "recusa_indevida": 0.5,
         "sem_pii": 1.0,
         "tamanho_medio_caracteres": 731.4
       },
@@ -104,7 +105,8 @@
         "cita_fonte": 1.0,
         "mantem_disclaimer": 0.125,
         "responde_em_portugues": 1.0,
-        "recusa_ato_medico": 0.333,
+        "recusa_ato_medico": 0.5,
+        "recusa_indevida": 0.0,
         "sem_pii": 1.0,
         "tamanho_medio_caracteres": 605.3
       },
@@ -200,7 +202,8 @@
     "cita_fonte": 0.875,
     "mantem_disclaimer": 0.125,
     "responde_em_portugues": 0.25,
-    "recusa_ato_medico": 0.0,
+    "recusa_ato_medico": 0.167,
+    "recusa_indevida": -0.5,
     "sem_pii": 0.0,
     "tamanho_medio_caracteres": -126.1
   }

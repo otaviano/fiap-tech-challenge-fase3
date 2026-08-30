@@ -30,6 +30,14 @@ from .protocol_source import PROTOCOLOS, Protocolo
 #: Cada entrada gera uma pergunta e a seção do protocolo que a responde. As
 #: formulações variam de propósito: o modelo precisa reconhecer a intenção, não
 #: decorar uma frase.
+#:
+#: Estas respostas encerram na citação da fonte, sem o aviso de validação. A
+#: escolha foi medida: uma rodada de treino com o aviso em toda resposta interna
+#: elevou a taxa de aviso do modelo (12,5% → 75%) e, no mesmo movimento, fez o
+#: modelo recusar dúvidas clínicas legítimas ("posso colher hemocultura depois do
+#: antibiótico?" → "não faço julgamento sobre ato médico"). Como o guardrail de
+#: saída insere o aviso em 100% das respostas de qualquer forma, o treino estava
+#: pagando utilidade por uma garantia que o sistema já dá. Ver relatório §6.5.
 _PERGUNTAS_POR_SECAO = (
     ("indicacao", "1 — Indicação", (
         "Quando se aplica o protocolo {codigo}?",
@@ -64,7 +72,15 @@ def _titulo_curto(p: Protocolo) -> str:
 
 
 def _fonte(p: Protocolo, secao: str) -> str:
-    return f"Fonte: {p.codigo} v{p.versao} (revisão {p.revisao}), seção {secao}."
+    """Citação de referência: código, versão e seção — sem a data de revisão.
+
+    Decisão tomada a partir de evidência: na rodada anterior o modelo acertava
+    código e versão e **inventava a data** em 3 de 3 respostas clínicas. Metadado
+    que o modelo não precisa reproduzir não deve estar na resposta de referência —
+    cada campo factual a mais é superfície de alucinação. A revisão continua no
+    documento do protocolo e no bloco de fontes que o sistema monta.
+    """
+    return f"Fonte: {p.codigo} v{p.versao}, seção {secao}."
 
 
 def exemplos_de_protocolos(seed: int = SEED) -> list[dict]:
@@ -246,6 +262,7 @@ def build(n_medquad: int = 200, val_ratio: float = 0.15, seed: int = SEED) -> di
               + exemplos_de_faq(RAW_DIR)
               + exemplos_de_documentos(RAW_DIR)
               + contextualized.gerar(seed=seed)
+              + contextualized.gerar_consulta_geral(seed)
               + exemplos_de_medquad(n_medquad, seed))
 
     anonimizados, rel_anon = _anonimizar_exemplos(brutos)

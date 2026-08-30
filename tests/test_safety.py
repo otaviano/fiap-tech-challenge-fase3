@@ -146,3 +146,25 @@ def test_citacao_de_protocolo_inexistente_ou_nao_recuperado():
                for m in guardrails.check_citations("Conforme o PROT-XXX-999.", {"PROT-EME-002"}))
     assert any(m.startswith("citacao_fora_do_contexto")
                for m in guardrails.check_citations("Conforme o PROT-CAR-003.", {"PROT-EME-002"}))
+
+
+def test_detecta_paciente_inventado_em_consulta_sem_prontuario():
+    """Regressão da rodada v4: numa pergunta geral, o modelo abriu com
+    'Paciente de 60 anos, homem' — caso inexistente, em texto institucional."""
+    resposta = ("**Resumo do caso.** Paciente de 60 anos, homem, no Hospital Santa Helena. "
+                "Conforme o PROT-PNE-006, calcular CURB-65.")
+    assert "paciente_inexistente_na_resposta" in guardrails.check_hallucinated_context(
+        resposta, tem_paciente=False)
+    assert guardrails.check_hallucinated_context(resposta, tem_paciente=True) == []
+
+
+def test_detecta_codigo_de_protocolo_fabricado():
+    """'PRONE-006' tem cara de código institucional e não existe."""
+    motivos = guardrails.check_hallucinated_context(
+        "Protocolo: Pneumonia adquirida na comunidade (PRONE-006) — v3.1", tem_paciente=False)
+    assert any(m.startswith("codigo_de_protocolo_malformado") for m in motivos)
+
+
+def test_codigo_valido_nao_e_sinalizado():
+    assert guardrails.check_hallucinated_context(
+        "Conforme o PROT-PNE-006 v3.1, calcular CURB-65.", tem_paciente=False) == []
