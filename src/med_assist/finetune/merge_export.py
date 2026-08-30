@@ -85,7 +85,11 @@ def to_gguf(merged_dir: Path = DEFAULT_MERGED, llama_cpp: Path | None = None,
     quantizador = next((c for c in (llama_cpp / "build" / "bin" / "llama-quantize",
                                     llama_cpp / "llama-quantize") if c.exists()), None)
     if quantizador is None:
-        logger.warning("llama-quantize não encontrado; ficando no f16 em %s", f16)
+        logger.warning(
+            "llama-quantize não encontrado em %s — ficando no f16 (%s). A quantização é "
+            "opcional: para tê-la, compile o alvo com "
+            "`cmake --build build --target llama-quantize` e rode este comando de novo.",
+            llama_cpp, f16)
         return f16
 
     logger.info("Quantizando para %s: %s", quant, out_file)

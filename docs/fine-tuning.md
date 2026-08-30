@@ -91,9 +91,13 @@ med-assist finetune evaluate --limit 12
 
 ```bash
 med-assist finetune merge                                    # funde o LoRA nos pesos base
-med-assist finetune gguf --llama-cpp ~/llama.cpp --quant Q4_K_M
-llama-server -m models/med-assist-Q4_K_M.gguf --alias med-assist --port 8080
+med-assist finetune gguf --llama-cpp ~/llama.cpp            # gera med-assist-f16.gguf
+llama-server -m models/med-assist-f16.gguf --alias med-assist --port 8080
 ```
+
+A quantização (`--quant Q4_K_M`) é opcional e depende do binário `llama-quantize`
+compilado no llama.cpp; sem ele o comando avisa e mantém o f16 — que para 0,5B
+roda folgado em CPU.
 
 O `GET /health` da API mostra qual modelo está de fato servindo — auditar isso
 importa, porque a mesma pergunta responde diferente conforme o servidor esteja

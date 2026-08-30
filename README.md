@@ -88,11 +88,16 @@ O repositório já traz `data/raw/` e `data/processed/` versionados. Para
 regenerar do zero:
 
 ```bash
-./scripts/fetch_medquad.sh     # opcional: corpus externo (~73 MB, não versionado)
+./scripts/fetch_medquad.sh     # baixe ANTES do build: ver o aviso abaixo
 med-assist data synth          # corpus bruto sintético (com PII, de propósito)
 med-assist data build          # anonimiza, cura, faz o split e escreve os relatórios
 med-assist ehr seed            # popula o prontuário eletrônico (SQLite)
 ```
+
+> **Ordem importa.** `data build` reescreve `data/processed/`. Sem o MedQuAD
+> baixado, o dataset sai com ~195 exemplos a menos que o versionado — o pipeline
+> funciona, mas deixa de bater com os relatórios em `results/eval/`. Ou baixe o
+> corpus antes, ou não rode o `build` (o dataset já vem pronto no repositório).
 
 ### 3. Servir a LLM
 
@@ -100,10 +105,27 @@ O assistente fala com qualquer endpoint OpenAI-compatível (llama.cpp, Ollama,
 LM Studio, vLLM). Com o modelo desta fase:
 
 ```bash
-llama-server -m models/med-assist-Q4_K_M.gguf --alias med-assist --port 8080
+llama-server -m models/med-assist-f16.gguf --alias med-assist --port 8080
 export LLM_BASE_URL=http://localhost:8080/v1   # padrão
 export LLM_MODEL=med-assist                    # padrão
 ```
+
+**Como obter o modelo**, em ordem de esforço:
+
+| Caminho | O que fazer | Tempo |
+|---|---|---|
+| Nenhum | não fazer nada — o assistente roda em modo contingência, com resposta citada e auditável | 0 |
+| Treinar em CPU | `med-assist finetune train` → `merge` → `gguf` | ~60 min |
+| Treinar em GPU | [`notebooks/finetune_colab.ipynb`](notebooks/finetune_colab.ipynb) na T4 gratuita | ~10 min |
+
+O pipeline gera `med-assist-f16.gguf` (~950 MB). A quantização para Q4_K_M é
+**opcional** e exige o binário `llama-quantize` compilado no seu llama.cpp
+(`cmake --build build --target llama-quantize`); sem ele, o comando avisa e
+mantém o f16, que roda sem problema para um modelo de 0,5B.
+
+> Os artefatos de treino (adapter e GGUF) não são versionados por peso — o que o
+> repositório versiona é o **pipeline que os produz** e as **evidências de que ele
+> rodou** (`results/eval/`, `results/logs/`).
 
 O modelo desta fase foi treinado em CPU nesta máquina (Qwen2.5-0.5B + LoRA,
 59 min): perplexidade de validação **9,60 → 3,19**, citação de fonte **0% → 100%**
