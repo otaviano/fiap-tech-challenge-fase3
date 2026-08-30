@@ -458,3 +458,73 @@ med-assist finetune evaluate --limit 12
 
 pytest -q                                          # 70 testes
 ```
+
+---
+
+## 9. Desafios enfrentados e soluções
+
+**O modelo que já rodava não podia ser treinado.** A intenção era fazer
+fine-tuning do Qwen3 4B servido na Fase 2. Duas paredes: GGUF Q4_K_M é formato de
+inferência (não há gradiente em pesos de 4 bits) e a máquina não tem GPU CUDA. A
+saída foi treinar um Qwen menor da mesma família e servir o resultado no mesmo
+`llama-server` — a infraestrutura de inferência atravessa as duas fases intacta, e
+o pipeline aceita `--device cuda` para treinar o 1.5B numa T4 sem alterar código.
+
+**O detector de PII deixava endereço passar.** O padrão inicial exigia inicial
+maiúscula após o logradouro, e `Rua das Acácias, nº 220` não casava — a preposição
+em minúscula quebrava a regex. Corrigido e coberto por teste, junto com o caso
+inverso: `30 mL/kg` e `0,1 U/kg/h` não podem ser confundidos com identificadores.
+Os dois erros são simétricos e igualmente caros: um vaza dado, o outro destrói a
+informação clínica.
+
+**O guardrail de saída bloqueou uma resposta correta.** Na primeira execução do
+fluxo completo, a resposta foi barrada por conter `PRT-2026-100137` e a data de
+admissão. O detector estava certo tecnicamente e errado no propósito: o número do
+prontuário é justamente o que diz ao médico de qual caso se fala. Daí a separação
+entre PII cadastral (bloqueia) e identificador operacional (circula, com acesso
+auditado) — mantendo a régua rígida para o dataset de treino.
+
+**O BM25 preferia a bibliografia.** A seção de *Referências* dos protocolos é
+curta, e a normalização por tamanho do BM25 favorece documentos curtos: ela
+aparecia entre os três primeiros resultados de consultas clínicas sem responder
+nada. Saiu do índice — com teste garantindo que não volte.
+
+**O modelo base inventou uma seção que não existia.** Numa consulta sem paciente,
+o Qwen base respondeu com um bloco "Alertas ativos" fabricado — exatamente o tipo
+de saída que, num contexto clínico, é mais perigosa por parecer estruturada e
+confiável. Foi o que motivou duas decisões: seções nomeadas e fixas no prompt (o
+modelo sempre sabe o que é protocolo, o que é dado do paciente e o que é alerta
+determinístico) e alertas nunca gerados, sempre calculados.
+
+**Respostas truncadas no meio da conduta.** O limite inicial de 700 tokens cortava
+a resposta na última recomendação. Subiu para 1000, com instrução explícita de
+concisão e preferência por lista numerada — em registro clínico, resposta cortada
+no meio de uma conduta é pior que resposta curta.
+
+---
+
+## 10. Conclusão
+
+A entrega cumpre os quatro requisitos do enunciado: fine-tuning com dados internos
+(LoRA sobre corpus sintético anonimizado e curado), assistente LangChain com
+consulta a base estruturada e contextualização por paciente, fluxo automatizado em
+LangGraph com verificação de pendências e emissão de alertas, e a camada de
+segurança e validação — limites de atuação, logging detalhado e explicabilidade.
+
+O que sustenta o projeto, porém, não é a lista de itens: é uma posição de
+engenharia sobre **onde colocar o LLM**. Sete dos oito nós do fluxo são
+determinísticos. Pendência de exame é diferença de conjuntos. Alerta é regra sobre
+dado estruturado. Limite de atuação é bloqueio antes da inferência. Fonte é o
+registro do que foi recuperado, com score. O modelo redige — bem, com o registro
+certo e citando o protocolo, que foi o que o fine-tuning ensinou — mas nada do que
+precisa de garantia depende dele.
+
+Essa escolha tem um custo que vale nomear: o sistema é menos "inteligente" do que
+um agente com liberdade para decidir seus próprios passos. Ele não descobre
+caminhos que não foram previstos. Num assistente clínico, achamos que essa é a
+troca certa — a autonomia que se ganha é pequena perto da garantia que se perde.
+
+**O que faríamos com mais tempo:** revisão dos protocolos por corpo clínico real,
+NER clínico somado aos padrões de PII, autenticação institucional com CRM
+validado, e avaliação com médicos julgando as respostas — hoje medimos
+comportamento do modelo, não utilidade clínica percebida.
