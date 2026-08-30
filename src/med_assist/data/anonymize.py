@@ -139,13 +139,28 @@ def anonymize_all(texts: Iterable[str]) -> tuple[list[str], AnonymizationReport]
     return outputs, consolidated
 
 
-def residual_pii(text: str) -> list[str]:
-    """PII que sobreviveu à anonimização — usada como *gate* na curadoria.
+#: Dado cadastral: nunca pode aparecer em texto de treino nem em resposta gerada.
+TIPOS_CADASTRAIS = ("CPF", "CNS", "RG", "EMAIL", "TELEFONE", "ENDERECO", "CEP", "NOME")
 
-    Ignora os pseudônimos já inseridos: `[CPF_4F2A]` não é PII.
+#: Identificadores operacionais. O número do prontuário e as datas assistenciais
+#: (admissão, solicitação de exame) são o que o profissional usa para saber de
+#: qual caso se fala — bloqueá-los na resposta tornaria o assistente inútil.
+#: Eles não entram no dataset de treino (a curadoria usa a lista completa), mas
+#: circulam na resposta ao profissional, com o acesso registrado na auditoria.
+TIPOS_OPERACIONAIS = ("PRONTUARIO", "CRM", "DATA", "IDADE_90+")
+
+
+def residual_pii(text: str, tipos: tuple[str, ...] | None = None) -> list[str]:
+    """PII que sobreviveu à anonimização — usada como *gate* na curadoria e na saída.
+
+    Ignora os pseudônimos já inseridos: `[CPF_4F2A]` não é PII. Por padrão checa
+    todos os tipos; passe `tipos=TIPOS_CADASTRAIS` para a checagem de resposta,
+    que tolera prontuário e datas assistenciais.
     """
     sem_tokens = re.sub(r"\[[A-Z_+0-9]+_[0-9A-F]{4}\]|\[IDADE_90\+\]", "", text)
     achados: list[str] = []
     for kind, pattern in PATTERNS:
+        if tipos is not None and kind not in tipos:
+            continue
         achados.extend(f"{kind}:{m.group(0)}" for m in pattern.finditer(sem_tokens))
     return achados

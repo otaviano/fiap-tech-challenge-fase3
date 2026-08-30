@@ -20,7 +20,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from ..data.anonymize import residual_pii
+from ..data.anonymize import TIPOS_CADASTRAIS, residual_pii
 from ..persona import DISCLAIMER
 
 # --------------------------------------------------------------------------- #
@@ -158,7 +158,9 @@ def check_output(resposta: str, exige_fonte: bool = True) -> tuple[str, Guardrai
     motivos: list[str] = []
     final = resposta.strip()
 
-    residuo = residual_pii(final)
+    # Só dado cadastral bloqueia: número de prontuário e datas assistenciais são
+    # o que identifica o caso para o profissional e circulam com acesso auditado.
+    residuo = residual_pii(final, tipos=TIPOS_CADASTRAIS)
     if residuo:
         motivos.append(f"pii_na_resposta:{len(residuo)}")
         return (

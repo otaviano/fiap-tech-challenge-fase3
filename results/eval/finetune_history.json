@@ -1,0 +1,87 @@
+{
+  "config": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "output_dir": "/tmp/claude-1000/-home-otavianomontes-source-repos-fiap-tech-challenge-fase2/7fa60bee-1528-43dd-bf12-0e55b3f3ee1e/scratchpad/smoke-lora",
+    "train_file": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/data/processed/train.jsonl",
+    "val_file": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/data/processed/val.jsonl",
+    "epochs": 1,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum": 2,
+    "max_len": 1024,
+    "warmup_ratio": 0.06,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "device": "auto",
+    "limit": 6,
+    "seed": 42,
+    "log_every": 1
+  },
+  "device": "cpu",
+  "parametros_treinaveis": 8798208,
+  "parametros_totais": 502830976,
+  "percentual_treinavel": 1.75,
+  "dataset": {
+    "exemplos": 6,
+    "tokens_total": 2378,
+    "tokens_medio": 396.3,
+    "tokens_p50": 419,
+    "tokens_p95": 630,
+    "tokens_max": 630,
+    "por_categoria": {
+      "conhecimento_geral": 3,
+      "documento": 1,
+      "faq": 1,
+      "protocolo_qa": 1
+    }
+  },
+  "validacao": 58,
+  "passos": 3,
+  "duracao_s": 140.9,
+  "metricas_iniciais": {
+    "val_loss": 2.451,
+    "val_perplexity": 11.6
+  },
+  "metricas_finais": {
+    "epoca": 1,
+    "passo": 3,
+    "train_loss_epoca": 2.5991,
+    "val_loss": 2.2867,
+    "val_perplexity": 9.842
+  },
+  "historico": [
+    {
+      "epoca": 0,
+      "passo": 0,
+      "val_loss": 2.451,
+      "val_perplexity": 11.6
+    },
+    {
+      "epoca": 1,
+      "passo": 1,
+      "train_loss": 2.3276,
+      "lr": 0.00015000000000000001
+    },
+    {
+      "epoca": 1,
+      "passo": 2,
+      "train_loss": 3.176,
+      "lr": 5.000000000000002e-05
+    },
+    {
+      "epoca": 1,
+      "passo": 3,
+      "train_loss": 2.2936,
+      "lr": 0.0
+    },
+    {
+      "epoca": 1,
+      "passo": 3,
+      "train_loss_epoca": 2.5991,
+      "val_loss": 2.2867,
+      "val_perplexity": 9.842
+    }
+  ],
+  "adapter": "/tmp/claude-1000/-home-otavianomontes-source-repos-fiap-tech-challenge-fase2/7fa60bee-1528-43dd-bf12-0e55b3f3ee1e/scratchpad/smoke-lora"
+}

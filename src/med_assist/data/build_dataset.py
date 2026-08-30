@@ -15,7 +15,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ..config import (EVAL_DIR, KB_DIR, PROCESSED_DIR, RAW_DIR, SEED, TRAIN_FILE, VAL_FILE,
+from ..config import (EVAL_DIR, KB_DIR, RAW_DIR, ROOT, SEED, TRAIN_FILE, VAL_FILE,
                       ensure_dirs)
 from ..persona import SYSTEM_PROMPT, SYSTEM_PROMPT_EN
 from . import medquad
@@ -212,6 +212,14 @@ def _to_chat(exemplo: dict) -> dict:
     }
 
 
+def _relativo(caminho: Path) -> str:
+    """Caminho relativo à raiz do projeto quando possível; absoluto fora dela."""
+    try:
+        return str(caminho.relative_to(ROOT))
+    except ValueError:
+        return str(caminho)
+
+
 def _write_jsonl(path: Path, registros: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as fh:
@@ -235,12 +243,12 @@ def build(n_medquad: int = 200, val_ratio: float = 0.15, seed: int = SEED) -> di
     ensure_dirs()
 
     brutos = (exemplos_de_protocolos(seed)
-              + exemplos_de_faq()
-              + exemplos_de_documentos()
+              + exemplos_de_faq(RAW_DIR)
+              + exemplos_de_documentos(RAW_DIR)
               + exemplos_de_medquad(n_medquad, seed))
 
     anonimizados, rel_anon = _anonimizar_exemplos(brutos)
-    rel_kb = build_knowledge_base()
+    rel_kb = build_knowledge_base(KB_DIR, RAW_DIR)
     rel_anon.merge(rel_kb)
 
     aprovados, rel_cur = curate(anonimizados, seed=seed)
@@ -262,9 +270,9 @@ def build(n_medquad: int = 200, val_ratio: float = 0.15, seed: int = SEED) -> di
         "treino": len(treino),
         "validacao": len(validacao),
         "arquivos": {
-            "treino": str(TRAIN_FILE.relative_to(PROCESSED_DIR.parents[1])),
-            "validacao": str(VAL_FILE.relative_to(PROCESSED_DIR.parents[1])),
-            "base_conhecimento": str(KB_DIR.relative_to(PROCESSED_DIR.parents[1])),
+            "treino": _relativo(TRAIN_FILE),
+            "validacao": _relativo(VAL_FILE),
+            "base_conhecimento": _relativo(KB_DIR),
         },
     }
     (EVAL_DIR / "resumo_dataset.json").write_text(

@@ -109,8 +109,14 @@ class AuditTrail:
 _trail: AuditTrail | None = None
 
 
-def get_audit_trail(caminho: Path = AUDIT_FILE) -> AuditTrail:
+def get_audit_trail(caminho: Path | None = None) -> AuditTrail:
+    """Trilha compartilhada do processo.
+
+    Sem argumento, devolve a trilha em uso — inclusive uma que tenha sido
+    substituída (testes, ou um destino configurado no bootstrap da aplicação).
+    Só recria quando um caminho diferente é pedido explicitamente.
+    """
     global _trail
-    if _trail is None or _trail.caminho != caminho:
-        _trail = AuditTrail(caminho)
+    if _trail is None or (caminho is not None and _trail.caminho != caminho):
+        _trail = AuditTrail(caminho or AUDIT_FILE)
     return _trail
