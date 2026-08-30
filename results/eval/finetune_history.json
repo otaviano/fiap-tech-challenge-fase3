@@ -8,7 +8,7 @@
     "lr": 0.0002,
     "batch_size": 1,
     "grad_accum": 8,
-    "max_len": 1024,
+    "max_len": 2048,
     "warmup_ratio": 0.06,
     "lora_r": 16,
     "lora_alpha": 32,
@@ -23,14 +23,15 @@
   "parametros_totais": 502830976,
   "percentual_treinavel": 1.75,
   "dataset": {
-    "exemplos": 328,
-    "tokens_total": 124202,
-    "tokens_medio": 378.7,
-    "tokens_p50": 379,
-    "tokens_p95": 596,
-    "tokens_max": 648,
+    "exemplos": 365,
+    "tokens_total": 183570,
+    "tokens_medio": 502.9,
+    "tokens_p50": 398,
+    "tokens_p95": 1596,
+    "tokens_max": 2048,
     "por_categoria": {
       "conhecimento_geral": 166,
+      "consulta_contextualizada": 37,
       "documento": 20,
       "faq": 17,
       "faq_contextualizada": 10,
@@ -38,88 +39,94 @@
       "protocolo_qa": 102
     }
   },
-  "validacao": 58,
-  "passos": 82,
-  "duracao_s": 3373.6,
+  "validacao": 64,
+  "passos": 90,
+  "duracao_s": 3685.3,
   "metricas_iniciais": {
-    "val_loss": 2.451,
-    "val_perplexity": 11.6
+    "val_loss": 2.28,
+    "val_perplexity": 9.777
   },
   "metricas_finais": {
     "epoca": 2,
-    "passo": 82,
-    "train_loss_epoca": 1.1792,
-    "val_loss": 1.4184,
-    "val_perplexity": 4.131
+    "passo": 90,
+    "train_loss_epoca": 1.0453,
+    "val_loss": 1.1832,
+    "val_perplexity": 3.265
   },
   "historico": [
     {
       "epoca": 0,
       "passo": 0,
-      "val_loss": 2.451,
-      "val_perplexity": 11.6
+      "val_loss": 2.28,
+      "val_perplexity": 9.777
     },
     {
       "epoca": 1,
       "passo": 10,
-      "train_loss": 2.3984,
-      "lr": 0.0001970941817426052
+      "train_loss": 2.2149,
+      "lr": 0.00019837448439320027
     },
     {
       "epoca": 1,
       "passo": 20,
-      "train_loss": 1.8386,
-      "lr": 0.00017994427634035015
+      "train_loss": 1.7652,
+      "lr": 0.00018568571761675893
     },
     {
       "epoca": 1,
       "passo": 30,
-      "train_loss": 1.6258,
-      "lr": 0.00015000000000000001
+      "train_loss": 1.5833,
+      "lr": 0.0001619448361215723
     },
     {
       "epoca": 1,
       "passo": 40,
-      "train_loss": 1.5708,
-      "lr": 0.0001120536680255323
+      "train_loss": 1.3729,
+      "lr": 0.00013021404155695725
     },
     {
       "epoca": 1,
-      "passo": 41,
-      "train_loss_epoca": 1.8396,
-      "val_loss": 1.5346,
-      "val_perplexity": 4.64
+      "passo": 45,
+      "train_loss_epoca": 1.6997,
+      "val_loss": 1.3229,
+      "val_perplexity": 3.754
     },
     {
       "epoca": 2,
       "passo": 50,
-      "train_loss": 1.146,
-      "lr": 7.217825360835473e-05
+      "train_loss": 0.5333,
+      "lr": 9.458610914145826e-05
     },
     {
       "epoca": 2,
       "passo": 60,
-      "train_loss": 1.1793,
-      "lr": 3.675546244046228e-05
+      "train_loss": 1.0713,
+      "lr": 5.965648380101916e-05
     },
     {
       "epoca": 2,
       "passo": 70,
-      "train_loss": 1.1163,
-      "lr": 1.1454397434679021e-05
+      "train_loss": 1.0176,
+      "lr": 2.993053979266577e-05
     },
     {
       "epoca": 2,
       "passo": 80,
-      "train_loss": 1.1788,
-      "lr": 3.2426918657900704e-07
+      "train_loss": 0.9853,
+      "lr": 9.242458032904311e-06
     },
     {
       "epoca": 2,
-      "passo": 82,
-      "train_loss_epoca": 1.1792,
-      "val_loss": 1.4184,
-      "val_perplexity": 4.131
+      "passo": 90,
+      "train_loss": 1.0878,
+      "lr": 2.606768482050215e-07
+    },
+    {
+      "epoca": 2,
+      "passo": 90,
+      "train_loss_epoca": 1.0453,
+      "val_loss": 1.1832,
+      "val_perplexity": 3.265
     }
   ],
   "adapter": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/models/med-assist-lora"

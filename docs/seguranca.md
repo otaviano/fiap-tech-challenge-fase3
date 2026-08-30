@@ -99,6 +99,19 @@ foi efetivamente usado:
 Se a resposta não tiver evidência, isso aparece: o guardrail de saída marca
 `resposta_sem_fonte` e a lista volta vazia na API.
 
+### Citação verdadeira, não só presente
+
+Uma citação plausível e errada é pior que citação nenhuma — ela convida à
+confiança. O modelo fine-tunado de 0,5B escreveu `PROT-EME-002 v6.0 (revisão
+2027-02-11)` quando a revisão real é 2026-01-30: código certo, versão certa, data
+inventada, em 3 de 3 respostas clínicas.
+
+`check_citations()` confere cada citação contra os metadados reais e contra o que
+foi de fato recuperado, e registra as divergências na auditoria
+(`revisao_divergente`, `citacao_fora_do_contexto`, `protocolo_inexistente`).
+Detectou 100% dos casos. O bloco de fontes gerado pelos nós continua ao lado da
+resposta como referência autoritativa.
+
 ## 6. Alertas: por que não são gerados
 
 Alerta é o tipo de saída em que alucinação custa caro nos dois sentidos — um
@@ -137,3 +150,6 @@ clínico é o próprio risco:
   rejeitando o que escapasse.
 - **Não há avaliação clínica dos desfechos.** Medimos comportamento do modelo
   (cita fonte, recusa ato médico, mantém aviso), não acurácia diagnóstica.
+- **O modelo pequeno erra metadado de citação.** Está medido e mitigado por
+  verificação cruzada, mas a mitigação detecta e registra — ela não impede que o
+  texto da resposta traga a data errada. Quem lê deve usar o bloco de fontes.

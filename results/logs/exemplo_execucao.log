@@ -1,0 +1,36 @@
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | interacao_iniciada | trace=f9b9af41 | usuario=CRM-SP 111.222 paciente_id=PRT-2026-100137 pergunta=O que devo priorizar agora neste caso?
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | triagem | trace=f9b9af41 | bloqueado=False motivos=[] paciente_id=PRT-2026-100137
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | prontuario_consultado | trace=f9b9af41 | paciente_id=PRT-2026-100137 protocolo=PROT-EME-002 campos_expostos=15 minimizado=True
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | exames_verificados | trace=f9b9af41 | paciente_id=PRT-2026-100137 pendentes=3 nao_solicitados=0 conforme=False
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | alertas_avaliados | trace=f9b9af41 | paciente_id=PRT-2026-100137 quantidade=2 codigos=['SEPSE_HEMOCULTURA_APOS_ATB', 'SEPSE_LACTATO_ELEVADO']
+2026-08-30 00:20:21 | INFO    | med_assist.auditoria | protocolos_recuperados | trace=f9b9af41 | quantidade=4 citacoes=['PROT-EME-002 v6.0, seção 1. Indicação', 'PROT-EME-002 v6.0, seção 4. Exames obrigatórios', 'PROT-EME-002 v6.0, seção 5. Alertas e não conformidades', 'PROT-EME-002 v6.0, seção 2. Critérios diagnósticos'] scores=[5.2426, 4.7145, 2.7453, 1.7902]
+2026-08-30 00:20:22 | INFO    | med_assist.llm | LLM conectada: med-assist (http://localhost:8081/v1)
+2026-08-30 00:20:27 | INFO    | med_assist.auditoria | resposta_gerada | trace=f9b9af41 | modo=llm caracteres=1179 trechos_no_prompt=4
+2026-08-30 00:20:27 | INFO    | med_assist.auditoria | saida_validada | trace=f9b9af41 | motivos=['revisao_divergente:PROT-EME-002:2027-02-15!=2026-01-30'] severidade=info evidencias=7
+2026-08-30 00:20:27 | INFO    | med_assist.auditoria | alerta_notificado | trace=f9b9af41 | codigo=SEPSE_HEMOCULTURA_APOS_ATB severidade=critico destinatario=equipe assistencial setor=Emergência leito=E-24 paciente_id=PRT-2026-100137 mensagem=Antimicrobiano ativo com hemoculturas ainda pendentes. O PROT-EME-002 exige duas hemoculturas de sítios distintos ANTES da primeira dose — coleta posterior reduz a positividade e inviabiliza o descalonamento. Registrar a justificativa. protocolo=PROT-EME-002
+2026-08-30 00:20:27 | INFO    | med_assist.auditoria | alerta_notificado | trace=f9b9af41 | codigo=SEPSE_LACTATO_ELEVADO severidade=alto destinatario=equipe assistencial setor=Emergência leito=E-24 paciente_id=PRT-2026-100137 mensagem=Lactato 3.8 mmol/L com qSOFA 2: critério de sepse pelo PROT-EME-002. Reavaliar lactato em 2 a 4 horas e garantir cristaloide 30 mL/kg se hipotensão ou lactato acima de 4. protocolo=PROT-EME-002
+2026-08-30 00:20:27 | WARNING | med_assist.graph | 2 alerta(s) notificado(s) para Emergência
+2026-08-30 00:20:27 | INFO    | med_assist.auditoria | interacao_concluida | trace=f9b9af41 | latencia_ms=6350.0
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | interacao_iniciada | trace=f64d024b | usuario=CRM-SP 111.222 paciente_id=PRT-2026-100411 pergunta=Quais exames estão pendentes e o que o protocolo exige?
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | triagem | trace=f64d024b | bloqueado=False motivos=[] paciente_id=PRT-2026-100411
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | prontuario_consultado | trace=f64d024b | paciente_id=PRT-2026-100411 protocolo=PROT-END-004 campos_expostos=15 minimizado=True
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | exames_verificados | trace=f64d024b | paciente_id=PRT-2026-100411 pendentes=3 nao_solicitados=0 conforme=False
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | alertas_avaliados | trace=f64d024b | paciente_id=PRT-2026-100411 quantidade=1 codigos=['CAD_INSULINA_COM_HIPOCALEMIA']
+2026-08-30 00:20:28 | INFO    | med_assist.auditoria | protocolos_recuperados | trace=f64d024b | quantidade=4 citacoes=['PROT-END-004 v3.4, seção 4. Exames obrigatórios', 'PROT-END-004 v3.4, seção 1. Indicação', 'PROT-END-004 v3.4, seção 2. Critérios diagnósticos', 'PROT-END-004 v3.4, seção 5. Alertas e não conformidades'] scores=[6.1981, 5.1199, 4.6822, 4.0578]
+2026-08-30 00:20:29 | INFO    | med_assist.llm | LLM conectada: med-assist (http://localhost:8081/v1)
+2026-08-30 00:20:34 | INFO    | med_assist.auditoria | resposta_gerada | trace=f64d024b | modo=llm caracteres=1023 trechos_no_prompt=4
+2026-08-30 00:20:34 | INFO    | med_assist.auditoria | saida_validada | trace=f64d024b | motivos=['revisao_divergente:PROT-END-004:2027-03-15!=2025-11-22'] severidade=info evidencias=6
+2026-08-30 00:20:34 | INFO    | med_assist.auditoria | alerta_notificado | trace=f64d024b | codigo=CAD_INSULINA_COM_HIPOCALEMIA severidade=critico destinatario=equipe assistencial setor=Unidade de Terapia Intensiva leito=U-27 paciente_id=PRT-2026-100411 mensagem=Insulina em curso com potássio 3.1 mEq/L. O PROT-END-004 determina repor potássio antes da insulina quando K é menor que 3,3 mEq/L — risco de arritmia fatal. Suspender a infusão e comunicar o plantão imediatamente. protocolo=PROT-END-004
+2026-08-30 00:20:34 | WARNING | med_assist.graph | 1 alerta(s) notificado(s) para Unidade de Terapia Intensiva
+2026-08-30 00:20:34 | INFO    | med_assist.auditoria | interacao_concluida | trace=f64d024b | latencia_ms=6123.5
+2026-08-30 00:20:35 | INFO    | med_assist.auditoria | interacao_iniciada | trace=fded5eca | usuario=CRM-SP 111.222 paciente_id=None pergunta=Qual a janela de trombólise no AVC isquêmico e o que preciso antes?
+2026-08-30 00:20:35 | INFO    | med_assist.auditoria | triagem | trace=fded5eca | bloqueado=False motivos=[] paciente_id=None
+2026-08-30 00:20:35 | INFO    | med_assist.auditoria | protocolos_recuperados | trace=fded5eca | quantidade=4 citacoes=['PROT-NEU-005 v4.0, seção 5. Alertas e não conformidades', 'PROT-NEU-005 v4.0, seção 3. Conduta', 'PROT-NEU-005 v4.0, seção 1. Indicação', 'PROT-NEU-005 v4.0, seção 2. Critérios diagnósticos'] scores=[10.9101, 10.5669, 9.3292, 8.5066]
+2026-08-30 00:20:36 | INFO    | med_assist.llm | LLM conectada: med-assist (http://localhost:8081/v1)
+2026-08-30 00:20:40 | INFO    | med_assist.auditoria | resposta_gerada | trace=fded5eca | modo=llm caracteres=882 trechos_no_prompt=4
+2026-08-30 00:20:40 | INFO    | med_assist.auditoria | saida_validada | trace=fded5eca | motivos=['revisao_divergente:PROT-NEU-005:2026-02-11!=2026-02-27', 'revisao_divergente:PROT-NEU-005:2026-02-11!=2026-02-27', 'revisao_divergente:PROT-NEU-005:2026-02-11!=2026-02-27'] severidade=info evidencias=4
+2026-08-30 00:20:40 | INFO    | med_assist.auditoria | interacao_concluida | trace=fded5eca | latencia_ms=5257.3
+2026-08-30 00:20:41 | INFO    | med_assist.auditoria | interacao_iniciada | trace=99a18fbf | usuario=CRM-SP 111.222 paciente_id=None pergunta=Prescreva 4,5g de piperacilina-tazobactam para o leito E-24 agora
+2026-08-30 00:20:41 | INFO    | med_assist.auditoria | triagem | trace=99a18fbf | bloqueado=True motivos=['prescricao_direta'] paciente_id=None
+2026-08-30 00:20:41 | INFO    | med_assist.auditoria | saida_validada | trace=99a18fbf | motivos=['prescricao_direta'] severidade=bloqueio evidencias=1
+2026-08-30 00:20:41 | INFO    | med_assist.auditoria | interacao_concluida | trace=99a18fbf | latencia_ms=2.0

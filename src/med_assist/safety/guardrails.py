@@ -21,6 +21,7 @@ import re
 from dataclasses import dataclass, field
 
 from ..data.anonymize import TIPOS_CADASTRAIS, residual_pii
+from ..data.protocol_source import PROTOCOLOS_POR_CODIGO
 from ..persona import DISCLAIMER
 
 # --------------------------------------------------------------------------- #
@@ -185,3 +186,52 @@ def check_output(resposta: str, exige_fonte: bool = True) -> tuple[str, Guardrai
 
     severidade = "aviso" if motivos else "info"
     return final, GuardrailVerdict(bloqueado=False, motivos=motivos, severidade=severidade)
+
+
+# --------------------------------------------------------------------------- #
+# Verificação cruzada das citações
+# --------------------------------------------------------------------------- #
+
+PADRAO_CODIGO = re.compile(r"PROT-[A-Z]{3}-\d{3}")
+PADRAO_VERSAO = re.compile(r"(PROT-[A-Z]{3}-\d{3})\s+v(\d+\.\d+)")
+PADRAO_REVISAO = re.compile(r"(PROT-[A-Z]{3}-\d{3})[^\n]{0,40}?revisão\s+(\d{4}-\d{2}-\d{2})", re.I)
+
+
+def check_citations(resposta: str, protocolos_recuperados: set[str]) -> list[str]:
+    """Confere se o que o modelo citou existe e bate com os metadados reais.
+
+    Motivação medida: o modelo fine-tunado de 0,5B escreveu
+    `PROT-EME-002 v6.0 (revisão 2027-02-11)` — código e versão corretos, data
+    inventada (a real é 2026-01-30). Citação é o mecanismo de explicabilidade do
+    sistema; uma citação plausível e errada é pior que citação nenhuma, porque
+    ela *convida* à confiança.
+
+    O sistema não corrige o texto do modelo — o bloco "Fontes consultadas" abaixo
+    da resposta é gerado pelos nós e continua sendo a referência autoritativa.
+    O que esta função faz é registrar a divergência na auditoria, onde ela vira
+    métrica de qualidade do modelo servido.
+    """
+    motivos: list[str] = []
+
+    citados = set(PADRAO_CODIGO.findall(resposta))
+    inexistentes = {c for c in citados if c not in PROTOCOLOS_POR_CODIGO}
+    if inexistentes:
+        motivos.append("protocolo_inexistente:" + ",".join(sorted(inexistentes)))
+
+    nao_recuperados = citados - inexistentes - protocolos_recuperados
+    if protocolos_recuperados and nao_recuperados:
+        motivos.append("citacao_fora_do_contexto:" + ",".join(sorted(nao_recuperados)))
+
+    for codigo, versao in PADRAO_VERSAO.findall(resposta):
+        protocolo = PROTOCOLOS_POR_CODIGO.get(codigo)
+        if protocolo and versao != protocolo.versao:
+            motivos.append(f"versao_divergente:{codigo}:{versao}!={protocolo.versao}")
+
+    for codigo, revisao in PADRAO_REVISAO.findall(resposta):
+        protocolo = PROTOCOLOS_POR_CODIGO.get(codigo)
+        if protocolo and revisao != protocolo.revisao:
+            motivos.append(f"revisao_divergente:{codigo}:{revisao}!={protocolo.revisao}")
+
+    # A mesma citação errada costuma aparecer várias vezes na mesma resposta;
+    # a auditoria registra o problema, não a contagem de repetições.
+    return list(dict.fromkeys(motivos))

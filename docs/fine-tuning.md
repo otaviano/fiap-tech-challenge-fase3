@@ -44,7 +44,7 @@ O pipeline é o mesmo nos dois; muda um parâmetro.
 | Learning rate | 2e-4 | faixa típica de LoRA (10–100× o de fine-tuning completo) |
 | Épocas | 2 | dataset pequeno; além disso o modelo decora |
 | Batch efetivo | 8 (1 × 8 de acumulação) | cabe em CPU sem estourar memória |
-| `max_len` | 1024 tokens | cobre p95 do dataset (~379 tokens de média) |
+| `max_len` | 2048 tokens | p95 do dataset é 1.596 (os exemplos contextualizados são longos) |
 
 Treináveis: **8.798.208 de 502.830.976 parâmetros (1,75%)**.
 
@@ -114,8 +114,44 @@ servem de teste de regressão:
 | `responde_em_portugues` | registro em pt-BR |
 | `sem_pii` | nenhum dado cadastral na resposta |
 
-Os resultados ficam em `results/eval/avaliacao_modelo.json`. A análise está no
-[relatório técnico](../RELATORIO_TECH_CHALLENGE_FASE3.md).
+Os resultados ficam em `results/eval/avaliacao_modelo.json`. A análise completa
+está na [seção 6 do relatório](../RELATORIO_TECH_CHALLENGE_FASE3.md).
+
+## Resultados medidos (CPU, Qwen2.5-0.5B)
+
+| Rodada | Dataset | Duração | val_loss | Perplexidade |
+|---|---|---|---|---|
+| v1 | 328 exemplos, `max_len` 1024 | 56,2 min | 2,451 → 1,418 | 11,60 → 4,13 |
+| **v2** | 365 exemplos, `max_len` 2048 | 61,4 min | 2,451 → **1,183** | 11,60 → **3,27** |
+
+Comportamento na v2, base vs. fine-tunado nos mesmos 14 prompts:
+
+| Métrica | Base | Fine-tunado |
+|---|---|---|
+| Cita a fonte | 0,000 | **1,000** |
+| Recusa ato médico (sem guardrail) | 0,667 | **1,000** |
+| Sem PII na resposta | 1,000 | 1,000 |
+| Tamanho médio | 599 caracteres | 274 caracteres |
+
+## A lição da v1: formato de treino = formato de inferência
+
+A v1 tinha boas métricas e **falhou no fluxo**: diante do prompt de produção, com
+suas quatro seções de contexto, o modelo ecoou as seções em vez de responder.
+Nenhuma métrica agregada capturou isso — só a execução ponta a ponta.
+
+A causa era estrutural: 328 exemplos de "pergunta curta → resposta" não ensinam a
+responder um prompt com contexto. A correção foi
+[`data/contextualized.py`](../src/med_assist/data/contextualized.py), que gera
+exemplos com o mesmo prompt do runtime. Na v2 o eco desapareceu, e a recusa de ato
+médico — que na v1 não tinha se movido — subiu de 66,7% para 100%.
+
+## Uma limitação que fica
+
+O modelo de 0,5B acerta código e versão do protocolo e **inventa a data de
+revisão** (3 de 3 respostas clínicas). Está mitigado por verificação cruzada
+determinística (`check_citations`), que detectou 100% dos casos e registra a
+divergência na auditoria. Modelos maiores tendem a errar menos; a verificação
+continua necessária de qualquer forma.
 
 > A métrica `recusa_ato_medico` mede o **modelo sozinho**, sem o guardrail de
 > entrada. Em produção esses pedidos nem chegam ao LLM: a medida existe para

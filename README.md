@@ -30,14 +30,14 @@ são sintéticos e autorais.
 | Fluxos do LangGraph | [`assistant/graph.py`](src/med_assist/assistant/graph.py) — 8 nós, 3 arestas condicionais |
 | Limites de atuação (nunca prescrever sem validação) | [`safety/guardrails.py`](src/med_assist/safety/guardrails.py) |
 | Logging detalhado para rastreamento e auditoria | [`safety/audit.py`](src/med_assist/safety/audit.py) — trilha JSONL por `trace_id` |
-| Explainability (fonte da informação) | [`safety/explainability.py`](src/med_assist/safety/explainability.py) |
+| Explainability (fonte da informação) | [`safety/explainability.py`](src/med_assist/safety/explainability.py) + verificação cruzada da citação em [`guardrails.py`](src/med_assist/safety/guardrails.py) |
 | Alertas para a equipe médica | [`assistant/alerts.py`](src/med_assist/assistant/alerts.py) — 11 regras determinísticas |
 | Dataset anonimizado / sintético | [`data/processed/`](data/processed/) + relatórios em [`results/eval/`](results/eval/) |
 | Projeto modularizado em Python | [`src/med_assist/`](src/med_assist/) |
 | Relatório técnico | [RELATORIO_TECH_CHALLENGE_FASE3.md](RELATORIO_TECH_CHALLENGE_FASE3.md) |
 | Diagrama do fluxo | [`docs/arquitetura.md`](docs/arquitetura.md), [`docs/fluxo-langgraph.mmd`](docs/fluxo-langgraph.mmd) |
-| Avaliação do modelo e análise | [`docs/fine-tuning.md`](docs/fine-tuning.md) + `results/eval/avaliacao_modelo.json` |
-| Testes automatizados | [`tests/`](tests/) — 70 testes |
+| Avaliação do modelo e análise | [relatório §6](RELATORIO_TECH_CHALLENGE_FASE3.md) + [`results/eval/`](results/eval/) |
+| Testes automatizados | [`tests/`](tests/) — 76 testes |
 
 ---
 

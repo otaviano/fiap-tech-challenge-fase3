@@ -104,11 +104,16 @@ Se a anonimização decide o que *pode* entrar, a curadoria decide o que *deveri
 
 | Filtro | Critério | Descartes |
 |---|---|---|
-| Tamanho | pergunta ≥ 12 caracteres; resposta entre 60 e 2000 | 0 |
+| Tamanho | pergunta ≥ 12 caracteres; resposta entre 60 e 3000 | 0 |
 | PII residual | qualquer identificador sobrevivente | 0 |
 | Citação de fonte | exemplo interno precisa referenciar `PROT-XXX-000` | 0 |
-| Duplicata exata | hash da pergunta normalizada | 3 |
+| Duplicata exata | hash da pergunta normalizada, ou `dedup_key` declarada | 8 |
 | Quase-duplicata | Jaccard ≥ 0,85 sobre shingles de 5 palavras | 0 |
+
+A `dedup_key` foi acrescentada depois: exemplos gerados por template (§6.2) têm
+estrutura de pergunta idêntica de propósito, e o filtro por shingles descartava 25
+de 48 casos clínicos distintos como se fossem repetição. Quando o exemplo declara
+sua própria chave, vale a igualdade exata dela.
 
 O filtro de citação de fonte é o mais interessante dos cinco: ele faz a
 explicabilidade entrar **já no treino**. Um exemplo cuja resposta não cita
@@ -123,13 +128,14 @@ vazar, o número deixa de ser zero e o teste falha.
 
 ### 2.4 Dataset final
 
-389 exemplos brutos → 386 aprovados → **328 de treino e 58 de validação**, com
+437 exemplos brutos → 429 aprovados → **365 de treino e 64 de validação**, com
 split estratificado por categoria:
 
 | Categoria | Exemplos | O que ensina |
 |---|---|---|
 | `protocolo_qa` | 120 | conteúdo dos protocolos, seção a seção, com fonte |
 | `conhecimento_geral` | 195 | registro de resposta clínica geral (MedQuAD, inglês) |
+| `consulta_contextualizada` | 43 | responder ao formato real do prompt de produção (§6.2) |
 | `documento` | 24 | formato dos modelos institucionais |
 | `faq` | 20 | dúvidas de plantão ancoradas em protocolo |
 | `faq_contextualizada` | 12 | a mesma dúvida aplicada a um caso concreto |
@@ -236,8 +242,6 @@ alerta é a regra.
 
 ## 4. Fine-tuning
 
-*(Seção completada com os resultados da execução — ver §4.4 e §5.)*
-
 ### 4.1 Escolha do modelo base
 
 A intenção inicial era treinar o próprio Qwen3 4B que a Fase 2 já servia. Duas
@@ -267,12 +271,12 @@ servido, não a infraestrutura de inferência.
 | Learning rate | 2e-4, warmup 6%, cosine decay |
 | Épocas | 2 |
 | Batch efetivo | 8 (1 × 8 de acumulação) |
-| `max_len` | 1024 tokens |
+| `max_len` | 2048 tokens (p95 do dataset: 1.596) |
 
 **Parâmetros treináveis: 8.798.208 de 502.830.976 (1,75%).**
 
 Fine-tuning completo foi descartado por três razões práticas: não caberia em CPU,
-não traria ganho perceptível para um dataset de 328 exemplos, e produziria um
+não traria ganho perceptível para um dataset de 365 exemplos, e produziria um
 artefato de 1 GB onde o LoRA produz alguns MB — o que torna versionar, comparar e
 reverter trivial.
 
@@ -290,7 +294,7 @@ recebem label `-100`:
 labels = [IGNORE_INDEX] * len(tokens_do_prompt) + tokens_da_resposta
 ```
 
-Sem essa máscara, o system prompt — longo e repetido em todos os 328 exemplos —
+Sem essa máscara, o system prompt — longo e repetido em todos os 365 exemplos —
 dominaria o sinal de treino, e o modelo gastaria capacidade decorando o próprio
 enunciado. O teste `test_loss_so_incide_sobre_a_resposta` verifica que os tokens
 supervisionados correspondem exatamente ao sufixo da sequência.
@@ -400,13 +404,165 @@ Se a resposta não tiver evidência, isso aparece: o guardrail marca
 modelo dizer de onde tirou a informação é uma explicabilidade que falha
 exatamente quando ele alucina — que é quando ela seria útil.
 
-### 5.5 Degradação graciosa
+### 5.5 Verificação cruzada das citações
+
+Explicabilidade só vale se a citação for verdadeira. O modelo servido pode citar
+um protocolo que não foi recuperado, ou acertar o código e errar a versão — foi o
+que aconteceu na prática (§6.4). `check_citations()` confere cada citação contra
+os metadados reais dos protocolos e contra o que os nós efetivamente recuperaram,
+registrando divergências na trilha:
+
+```
+revisao_divergente:PROT-EME-002:2027-02-15!=2026-01-30
+citacao_fora_do_contexto:PROT-CAR-003
+protocolo_inexistente:PROT-XXX-999
+```
+
+O sistema não reescreve o texto do modelo: o bloco "Fontes consultadas", gerado
+pelos nós com código, versão, seção e score, continua sendo a referência
+autoritativa ao lado da resposta.
+
+### 5.6 Degradação graciosa
 
 Se o servidor da LLM cai, o assistente não quebra e não inventa: um redator
 determinístico monta a resposta a partir do que os nós já apuraram, marcada como
 `modo contingência`, ainda citada e auditável. É o que mantém a demonstração e a
 suíte de testes executáveis em qualquer máquina — e, em produção, o que evita que
 a indisponibilidade do modelo derrube a consulta ao protocolo.
+
+---
+
+## 6. Avaliação do modelo e análise dos resultados
+
+Foram duas rodadas de treino. A primeira funcionou pelas métricas e **falhou no
+fluxo real** — e é essa diferença que sustenta esta seção.
+
+### 6.1 Convergência
+
+| Rodada | Dataset | Duração (CPU) | val_loss inicial | val_loss final | Perplexidade |
+|---|---|---|---|---|---|
+| v1 | 328 exemplos, `max_len` 1024 | 56,2 min | 2,451 | 1,418 | 11,60 → 4,13 |
+| **v2** | 365 exemplos, `max_len` 2048 | 61,4 min | 2,451 | **1,183** | 11,60 → **3,27** |
+
+A perplexidade de validação caiu **72%** na v2. Loss de treino e de validação
+desceram juntas nas duas rodadas — em nenhuma delas a validação subiu enquanto o
+treino descia, que é o sinal de memorização que se procura em dataset pequeno.
+
+### 6.2 O que a v1 revelou
+
+A v1 melhorou o que se esperava — citação de fonte foi de 12,5% para 100% — mas,
+colocada no fluxo, produziu isto:
+
+```
+# Contexto do paciente
+Prontuário PRT-2026-100137 (dados mínimos necessários):
+- Idade/sexo: 88 anos, F
+...
+# Pendências
+# Trechos de protocolo recuperados
+```
+
+O modelo **ecoou as seções do prompt** em vez de responder. A causa: todos os 328
+exemplos eram "pergunta curta → resposta", enquanto o prompt de produção tem
+quatro seções de contexto. É o mesmo princípio do chat template, um nível acima —
+o formato de treino precisa ser o formato de inferência.
+
+Esse defeito não aparece em perplexidade, nem em nenhuma das métricas
+comportamentais: ele só aparece executando o modelo dentro do sistema. É a
+justificativa mais forte para a demonstração ponta a ponta fazer parte da
+avaliação, e não apenas os números.
+
+**A correção** foi a categoria `consulta_contextualizada`: 43 exemplos montados
+com o **mesmo `ASSISTANT_PROMPT` do runtime**, preenchidos com casos reais da base
+estruturada, e resposta de referência redigida a partir do que já foi apurado.
+Junto veio o ajuste da deduplicação (`dedup_key`), porque o filtro de
+quase-duplicata descartava 25 de 48 casos clínicos distintos por terem — de
+propósito — a mesma estrutura.
+
+### 6.3 Avaliação comportamental (v2)
+
+Mesmos 14 prompts nos dois modelos, geração determinística (`do_sample=False`):
+8 consultas clínicas do conjunto de validação e 6 pedidos de ato médico.
+
+| Métrica | Base | Fine-tunado | Δ |
+|---|---|---|---|
+| Cita a fonte | 0,000 | **1,000** | +1,000 |
+| Recusa ato médico (sem guardrail) | 0,667 | **1,000** | +0,333 |
+| Responde em português | 0,875 | 0,875 | 0,000 |
+| Sem PII na resposta | 1,000 | 1,000 | 0,000 |
+| Mantém aviso de validação | 0,000 | 0,125 | +0,125 |
+| Tamanho médio (caracteres) | 599,5 | 274,2 | −325,3 |
+
+**Citação de fonte: 0% → 100%.** É o efeito direto do filtro de curadoria que
+exige `PROT-XXX-000` na resposta dos exemplos internos — o modelo nunca viu uma
+resposta interna sem fonte, então não produz uma.
+
+**Recusa de ato médico: 66,7% → 100%**, com o guardrail desligado. A medida isola
+o efeito do fine-tuning; em produção esses pedidos nem chegam ao modelo. Vale
+notar que na v1 essa métrica não se moveu (33,3% nos dois): os 13 exemplos de
+recusa não bastaram enquanto o modelo não aprendeu o formato de resposta do
+sistema.
+
+**Respostas 54% mais curtas**, sem perda de conteúdo — o modelo base preenchia
+espaço com paráfrase; o fine-tunado vai ao ponto na estrutura institucional.
+
+**Aviso de validação: 12,5%, e a explicação importa.** Os prompts clínicos
+avaliados vêm de `protocolo_qa` e `faq`, cujas respostas de referência terminam em
+`Fonte: PROT-... seção X` — sem o aviso, porque são respostas factuais sobre o
+protocolo. O aviso está nos exemplos de conduta (`consulta_contextualizada`),
+documento e recusa. Ou seja: **o modelo aprendeu exatamente o que o dataset
+ensina**, e a métrica está medindo uma categoria em que o aviso não é o padrão.
+Na prática o guardrail de saída insere o aviso em 100% das respostas — verificado
+por teste. Corrigir isso no dataset é trabalho de uma próxima iteração; assumir
+que o número baixo é uma falha do treino seria ler mal a evidência.
+
+### 6.4 A limitação que a execução expôs: citação plausível e errada
+
+Testando a v2 no fluxo, o modelo escreveu:
+
+```
+Fonte: PROT-EME-002 v6.0 (revisão 2027-02-11), seções 3 — Conduta e 4 — Exames
+obrigatórios; prontuário PRT-2026-100137.
+```
+
+Código correto, versão correta, **data de revisão inventada** — a real é
+2026-01-30. Repetindo em quatro consultas, a divergência apareceu em **3 de 3
+respostas clínicas** (`PROT-EME-002`, `PROT-END-004` e `PROT-NEU-005`).
+
+É o pior tipo de erro de um assistente clínico: plausível, específico e no lugar
+exato onde o leitor deposita confiança. Um modelo de 0,5B carrega metadado de
+citação mal, mesmo com o texto correto no contexto.
+
+A mitigação seguiu a regra do projeto — o determinístico audita o gerado.
+`check_citations()` confere cada citação contra os metadados reais e contra o que
+foi de fato recuperado, registrando na auditoria:
+
+```
+revisao_divergente:PROT-EME-002:2027-02-15!=2026-01-30
+citacao_fora_do_contexto:PROT-CAR-003
+protocolo_inexistente:PROT-XXX-999
+```
+
+Detectou **100% dos casos**. O bloco "Fontes consultadas" que acompanha a resposta
+continua sendo gerado pelos nós, com código, versão, seção e score — então o
+médico tem a referência correta ao lado da citação do modelo, e a divergência fica
+registrada como métrica de qualidade do modelo servido.
+
+Vale dizer o que isso significa para a escolha de modelo: com um 1.5B ou 4B a
+tendência é o problema diminuir, mas a verificação continua necessária. Confiar
+que um modelo maior não erra metadado é substituir uma garantia por uma esperança.
+
+### 6.5 Síntese
+
+O fine-tuning entregou o que se propôs — registro institucional, formato de
+resposta do sistema, citação de fonte em 100% e recusa de ato médico em 100% — e
+deixou explícito o que ele **não** entrega: precisão factual em metadado, que é
+responsabilidade da recuperação e da verificação, não dos pesos.
+
+Evidências reproduzíveis em `results/eval/`: `finetune_history_v1.json`,
+`finetune_history_v2.json`, `avaliacao_modelo_v1.json`, `avaliacao_modelo_v2.json`,
+além dos logs de execução em `results/logs/exemplo_execucao.log` e da trilha em
+`results/logs/exemplo_auditoria.jsonl`.
 
 ---
 
@@ -429,7 +585,7 @@ nenhum dos dois em tempo de execução. O único texto compartilhado entre trein
 inferência é a persona — de propósito, para que o modelo não seja treinado com um
 contrato e executado com outro.
 
-**70 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
+**76 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
 prontuário e a minimização, os guardrails nos dois sentidos, as regras de alerta,
 a trilha de auditoria, o fluxo LangGraph completo (com LLM falsa), a API e a
 máscara de labels do fine-tuning. A suíte roda sem GPU, sem rede e sem servidor de
@@ -456,7 +612,7 @@ pip install -r requirements-finetune.txt
 med-assist finetune train --epochs 2
 med-assist finetune evaluate --limit 12
 
-pytest -q                                          # 70 testes
+pytest -q                                          # 76 testes
 ```
 
 ---

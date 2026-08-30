@@ -125,3 +125,24 @@ def test_trilha_e_append_only(trilha):
     linhas_2 = trilha.caminho.read_text(encoding="utf-8").splitlines()
     assert linhas_2[:len(linhas_1)] == linhas_1
     assert all(json.loads(linha) for linha in linhas_2)
+
+
+def test_citacao_com_revisao_inventada_e_sinalizada():
+    """Regressão medida: o modelo citou 'PROT-EME-002 v6.0 (revisão 2027-02-11)';
+    a revisão real é 2026-01-30. Citação plausível e errada é pior que nenhuma."""
+    motivos = guardrails.check_citations(
+        "Fonte: PROT-EME-002 v6.0 (revisão 2027-02-11), seção 3.", {"PROT-EME-002"})
+    assert any(m.startswith("revisao_divergente:PROT-EME-002") for m in motivos)
+
+
+def test_citacao_correta_nao_gera_motivo():
+    motivos = guardrails.check_citations(
+        "Fonte: PROT-EME-002 v6.0 (revisão 2026-01-30), seção 3.", {"PROT-EME-002"})
+    assert motivos == []
+
+
+def test_citacao_de_protocolo_inexistente_ou_nao_recuperado():
+    assert any(m.startswith("protocolo_inexistente")
+               for m in guardrails.check_citations("Conforme o PROT-XXX-999.", {"PROT-EME-002"}))
+    assert any(m.startswith("citacao_fora_do_contexto")
+               for m in guardrails.check_citations("Conforme o PROT-CAR-003.", {"PROT-EME-002"}))

@@ -31,9 +31,12 @@ outputs/
 *.safetensors
 *.bin
 
-# Resultados: métricas e logs de evidência SÃO versionados; o resto não
+# Resultados: métricas e as evidências curadas SÃO versionadas; o resto não.
+# A trilha ativa e os logs de execução crescem a cada rodada e não entram.
 results/**/*.png
 results/logs/*.log
+results/logs/*.out
+results/logs/auditoria.jsonl
 !results/logs/exemplo_execucao.log
 !results/logs/exemplo_auditoria.jsonl
 
