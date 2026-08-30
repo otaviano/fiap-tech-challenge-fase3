@@ -39,7 +39,11 @@ ONLINE (atendimento)
 
 A dependência aponta sempre para dentro: `assistant` conhece `knowledge` e
 `safety`; `knowledge` não conhece o assistente; `data` e `finetune` não conhecem
-nenhum dos dois em tempo de execução. A persona é o único texto compartilhado
+nenhum dos dois em tempo de execução — com **uma exceção deliberada**:
+`data/contextualized.py` importa o prompt e as ferramentas do runtime para gerar
+exemplos de treino no formato exato da inferência. Reimplementar o template ali
+faria os dois divergirem na primeira alteração, que é o defeito que esse módulo
+existe para corrigir. A persona é o único texto compartilhado
 entre treino e inferência ([`persona.py`](../src/med_assist/persona.py)) — de
 propósito, para que o modelo não seja treinado com um contrato e executado com outro.
 

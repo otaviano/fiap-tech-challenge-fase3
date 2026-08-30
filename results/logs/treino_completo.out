@@ -6,3 +6,13 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 2026-08-29 21:58:14 | INFO    | med_assist.finetune | Antes do treino: {'val_loss': 2.451, 'val_perplexity': 11.6}
 2026-08-29 22:05:37 | INFO    | med_assist.finetune | época 1 | passo 10/82 | loss 2.3984 | lr 1.97e-04
 2026-08-29 22:12:23 | INFO    | med_assist.finetune | época 1 | passo 20/82 | loss 1.8386 | lr 1.80e-04
+2026-08-29 22:19:28 | INFO    | med_assist.finetune | época 1 | passo 30/82 | loss 1.6258 | lr 1.50e-04
+2026-08-29 22:25:41 | INFO    | med_assist.finetune | época 1 | passo 40/82 | loss 1.5708 | lr 1.12e-04
+2026-08-29 22:27:50 | INFO    | med_assist.finetune | época 1 concluída | train_loss 1.8396 | {'val_loss': 1.5346, 'val_perplexity': 4.64}
+2026-08-29 22:33:31 | INFO    | med_assist.finetune | época 2 | passo 50/82 | loss 1.1460 | lr 7.22e-05
+2026-08-29 22:39:38 | INFO    | med_assist.finetune | época 2 | passo 60/82 | loss 1.1793 | lr 3.68e-05
+2026-08-29 22:45:36 | INFO    | med_assist.finetune | época 2 | passo 70/82 | loss 1.1163 | lr 1.15e-05
+2026-08-29 22:51:31 | INFO    | med_assist.finetune | época 2 | passo 80/82 | loss 1.1788 | lr 3.24e-07
+2026-08-29 22:54:28 | INFO    | med_assist.finetune | época 2 concluída | train_loss 1.1792 | {'val_loss': 1.4184, 'val_perplexity': 4.131}
+2026-08-29 22:54:28 | INFO    | med_assist.finetune | Fine-tuning concluído em 56.2 min — adapter em /home/otavianomontes/source/repos/fiap-tech-challenge-fase3/models/med-assist-lora
+TREINO COMPLETO: {'val_loss': 2.451, 'val_perplexity': 11.6} -> {'epoca': 2, 'passo': 82, 'train_loss_epoca': 1.1792, 'val_loss': 1.4184, 'val_perplexity': 4.131}

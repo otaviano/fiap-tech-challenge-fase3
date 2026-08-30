@@ -52,14 +52,17 @@ PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("DATA", re.compile(r"\b\d{2}/\d{2}/\d{4}\b")),
     # Nome próprio: título clínico seguido de nome composto, ou prenome conhecido
     # seguido de pelo menos um sobrenome capitalizado.
+    # `[ \t]+` em vez de `\s+`: o nome tem de estar na MESMA linha do título.
+    # Com `\s+`, "paciente" no fim de um parágrafo casava com a primeira palavra
+    # capitalizada do parágrafo seguinte e bloqueava resposta legítima.
     ("NOME", re.compile(
-        r"\b(?:Dr\.|Dra\.|Sr\.|Sra\.|paciente|Paciente)\s+"
+        r"\b(?:Dr\.|Dra\.|Sr\.|Sra\.|paciente|Paciente)[ \t]+"
         r"(?:[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+)"
-        r"(?:\s+(?:d[aeo]s?\s+)?[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+){0,3}"
+        r"(?:[ \t]+(?:d[aeo]s?[ \t]+)?[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+){0,3}"
     )),
     ("NOME", re.compile(
         rf"\b(?:{_PRENOMES})"
-        r"(?:\s+(?:d[aeo]s?\s+)?[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+){1,3}"
+        r"(?:[ \t]+(?:d[aeo]s?[ \t]+)?[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+){1,3}"
     )),
     # Regra safe-harbor: idades acima de 89 anos são reidentificáveis.
     ("IDADE_90+", re.compile(r"\b(?:9\d|1\d{2})\s*anos\b")),

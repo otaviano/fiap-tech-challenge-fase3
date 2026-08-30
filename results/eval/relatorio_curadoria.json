@@ -1,12 +1,13 @@
 {
-  "exemplos_de_entrada": 389,
-  "exemplos_aprovados": 386,
-  "descartados": 3,
+  "exemplos_de_entrada": 437,
+  "exemplos_aprovados": 429,
+  "descartados": 8,
   "motivos_de_descarte": {
-    "duplicata_exata": 3
+    "duplicata_exata": 8
   },
   "aprovados_por_categoria": {
     "conhecimento_geral": 195,
+    "consulta_contextualizada": 43,
     "documento": 24,
     "faq": 20,
     "faq_contextualizada": 12,

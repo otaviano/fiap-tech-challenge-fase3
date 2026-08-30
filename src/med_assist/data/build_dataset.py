@@ -18,7 +18,7 @@ from pathlib import Path
 from ..config import (EVAL_DIR, KB_DIR, RAW_DIR, ROOT, SEED, TRAIN_FILE, VAL_FILE,
                       ensure_dirs)
 from ..persona import SYSTEM_PROMPT, SYSTEM_PROMPT_EN
-from . import medquad
+from . import contextualized, medquad
 from .anonymize import AnonymizationReport, anonymize
 from .curation import curate, split
 from .protocol_source import PROTOCOLOS, Protocolo
@@ -245,6 +245,7 @@ def build(n_medquad: int = 200, val_ratio: float = 0.15, seed: int = SEED) -> di
     brutos = (exemplos_de_protocolos(seed)
               + exemplos_de_faq(RAW_DIR)
               + exemplos_de_documentos(RAW_DIR)
+              + contextualized.gerar(seed=seed)
               + exemplos_de_medquad(n_medquad, seed))
 
     anonimizados, rel_anon = _anonimizar_exemplos(brutos)

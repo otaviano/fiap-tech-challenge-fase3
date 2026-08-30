@@ -95,3 +95,52 @@ def test_base_de_conhecimento_sai_anonimizada(tmp_path):
         assert residual_pii(conteudo) == []
         assert "santahelena.hosp.br" not in conteudo
         assert "## 3. Conduta" in conteudo, "a anonimização não pode destruir a estrutura"
+
+
+def test_exemplos_contextualizados_usam_o_prompt_do_runtime(db):
+    """O formato de treino tem de ser o mesmo formato da inferência.
+
+    Regressão da primeira rodada de fine-tuning: treinado só com perguntas
+    curtas, o modelo ecoou as seções do prompt em vez de responder.
+    """
+    from med_assist.assistant.prompts import ASSISTANT_PROMPT
+    from med_assist.data import contextualized
+
+    exemplos = contextualized.gerar(n_pacientes=3, perguntas_por_paciente=2)
+    assert len(exemplos) >= 5
+
+    for exemplo in exemplos:
+        prompt = exemplo["pergunta"]
+        # As quatro seções que o nó `redigir_resposta` monta em produção.
+        for secao in ("### Contexto do paciente", "### Pendências",
+                      "### Trechos de protocolo recuperados", "Pergunta do profissional:"):
+            assert secao in prompt, f"seção ausente: {secao}"
+        assert "dedup_key" in exemplo
+
+        resposta = exemplo["resposta"]
+        assert "Fonte:" in resposta and "PROT-" in resposta
+        assert "validação do médico assistente" in resposta
+
+    # O template usado é literalmente o do runtime.
+    template = ASSISTANT_PROMPT.messages[-1].prompt.template
+    assert "Pergunta do profissional: {pergunta}" in template
+
+
+def test_dedup_key_preserva_casos_distintos_de_mesmo_formato():
+    """Exemplos gerados por template têm estrutura idêntica de propósito."""
+    from med_assist.data.curation import curate
+
+    base = {"categoria": "consulta_contextualizada",
+            "resposta": "Resumo do caso. Fonte: PROT-EME-002 v6.0, seção 3. "
+                        "Exige validação do médico assistente antes de qualquer conduta."}
+    exemplos = [
+        {**base, "pergunta": "### Contexto do paciente\nProntuário A\nPergunta: o que priorizar?",
+         "dedup_key": "ctx:A:prioridades"},
+        {**base, "pergunta": "### Contexto do paciente\nProntuário B\nPergunta: o que priorizar?",
+         "dedup_key": "ctx:B:prioridades"},
+        {**base, "pergunta": "### Contexto do paciente\nProntuário A\nPergunta: o que priorizar?",
+         "dedup_key": "ctx:A:prioridades"},
+    ]
+    aprovados, relatorio = curate(exemplos)
+    assert len(aprovados) == 2, "casos distintos foram descartados como quase-duplicata"
+    assert relatorio.descartes["duplicata_exata"] == 1

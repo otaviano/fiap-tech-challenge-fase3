@@ -1,0 +1,5 @@
+2026-08-29 23:08:33 | INFO    | med_assist.finetune | Fine-tuning de Qwen/Qwen2.5-0.5B-Instruct em cpu
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-08-29 23:08:35 | INFO    | med_assist.finetune | Treino: 365 exemplos (183570 tokens, média 502.9) | Validação: 64
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  72%|███████▏  | 209/290 [00:00<00:00, 2067.96it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 2183.82it/s]
+2026-08-29 23:08:36 | INFO    | med_assist.finetune | Parâmetros treináveis: 8,798,208 de 502,830,976 (1.75%)

@@ -1,15 +1,15 @@
 {
-  "exemplos_brutos": 389,
+  "exemplos_brutos": 437,
   "anonimizacao": {
-    "documentos_processados": 390,
-    "identificadores_removidos": 260,
+    "documentos_processados": 486,
+    "identificadores_removidos": 404,
     "por_tipo": {
+      "PRONTUARIO": 144,
       "NOME": 80,
-      "PRONTUARIO": 48,
+      "DATA": 56,
       "CRM": 44,
       "TELEFONE": 28,
       "CPF": 20,
-      "DATA": 8,
       "CNS": 8,
       "CEP": 8,
       "ENDERECO": 8,
@@ -17,14 +17,15 @@
     }
   },
   "curadoria": {
-    "exemplos_de_entrada": 389,
-    "exemplos_aprovados": 386,
-    "descartados": 3,
+    "exemplos_de_entrada": 437,
+    "exemplos_aprovados": 429,
+    "descartados": 8,
     "motivos_de_descarte": {
-      "duplicata_exata": 3
+      "duplicata_exata": 8
     },
     "aprovados_por_categoria": {
       "conhecimento_geral": 195,
+      "consulta_contextualizada": 43,
       "documento": 24,
       "faq": 20,
       "faq_contextualizada": 12,
@@ -32,8 +33,8 @@
       "protocolo_qa": 120
     }
   },
-  "treino": 328,
-  "validacao": 58,
+  "treino": 365,
+  "validacao": 64,
   "arquivos": {
     "treino": "data/processed/train.jsonl",
     "validacao": "data/processed/val.jsonl",

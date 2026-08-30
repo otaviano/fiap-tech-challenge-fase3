@@ -19,7 +19,7 @@ from .anonymize import residual_pii
 
 MIN_PERGUNTA = 12
 MIN_RESPOSTA = 60
-MAX_RESPOSTA = 2000
+MAX_RESPOSTA = 3000
 NEAR_DUP_THRESHOLD = 0.85
 SHINGLE = 5
 
@@ -93,18 +93,24 @@ def curate(exemplos: list[dict], seed: int = SEED) -> tuple[list[dict], Curation
             report.descartes["sem_citacao_de_fonte"] += 1
             continue
 
-        chave = hashlib.sha1(_normalize(pergunta).encode()).hexdigest()
+        # `dedup_key` existe para exemplos gerados por template, em que a estrutura
+        # da pergunta é intencionalmente idêntica e a variação está no conteúdo
+        # clínico. Comparar shingles do prompt inteiro descartaria casos distintos
+        # como se fossem repetição — o exemplo declara então sua própria chave.
+        chave_bruta = exemplo.get("dedup_key") or _normalize(pergunta)
+        chave = hashlib.sha1(chave_bruta.encode()).hexdigest()
         if chave in vistos_hash:
             report.descartes["duplicata_exata"] += 1
             continue
 
-        sh = _shingles(pergunta)
-        if any(_jaccard(sh, outro) >= NEAR_DUP_THRESHOLD for _, outro in shingles_aprovados):
-            report.descartes["quase_duplicata"] += 1
-            continue
+        if "dedup_key" not in exemplo:
+            sh = _shingles(pergunta)
+            if any(_jaccard(sh, outro) >= NEAR_DUP_THRESHOLD for _, outro in shingles_aprovados):
+                report.descartes["quase_duplicata"] += 1
+                continue
+            shingles_aprovados.append((chave, sh))
 
         vistos_hash.add(chave)
-        shingles_aprovados.append((chave, sh))
         aprovados.append(exemplo)
         report.por_categoria[categoria] += 1
 

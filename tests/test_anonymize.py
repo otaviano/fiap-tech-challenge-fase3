@@ -43,3 +43,12 @@ def test_idade_acima_de_89_e_generalizada():
     limpo, relatorio = anonymize("Acompanhante com 92 anos relata o caso.")
     assert "[IDADE_90+]" in limpo
     assert relatorio.counts["IDADE_90+"] == 1
+
+
+def test_titulo_nao_captura_nome_da_linha_seguinte():
+    """Regressão: 'paciente' no fim de um bloco casava com a palavra capitalizada
+    do bloco seguinte e bloqueava resposta legítima do assistente."""
+    texto = "Dados mínimos do paciente\n\nProntuário PRT-2026-100137 (sepse)."
+    limpo, relatorio = anonymize(texto)
+    assert relatorio.counts["NOME"] == 0
+    assert "Dados mínimos do paciente" in limpo

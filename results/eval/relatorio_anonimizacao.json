@@ -1,13 +1,13 @@
 {
-  "documentos_processados": 390,
-  "identificadores_removidos": 260,
+  "documentos_processados": 486,
+  "identificadores_removidos": 404,
   "por_tipo": {
+    "PRONTUARIO": 144,
     "NOME": 80,
-    "PRONTUARIO": 48,
+    "DATA": 56,
     "CRM": 44,
     "TELEFONE": 28,
     "CPF": 20,
-    "DATA": 8,
     "CNS": 8,
     "CEP": 8,
     "ENDERECO": 8,

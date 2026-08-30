@@ -88,14 +88,51 @@ nunca vê uma resposta interna sem fonte.
 |---|---|---|
 | `protocolo_qa` | 120 | conteúdo dos protocolos, seção a seção, sempre com fonte |
 | `conhecimento_geral` | 195 | registro de resposta clínica geral (MedQuAD, inglês) |
+| `consulta_contextualizada` | 43 | responder ao **formato real do prompt de produção** |
 | `documento` | 24 | formato dos modelos institucionais de laudo, receita e procedimento |
 | `faq` | 20 | dúvidas de plantão, com a resposta ancorada em protocolo |
 | `faq_contextualizada` | 12 | mesma dúvida aplicada a um caso concreto |
 | `limite_de_atuacao` | 15 | recusa de ato médico, com a alternativa oferecida |
 
-Split estratificado por categoria: **328 exemplos de treino, 58 de validação** —
+Split estratificado por categoria: **365 exemplos de treino, 64 de validação** —
 a validação tem a mesma composição do treino, e nenhuma pergunta aparece nos dois
 lados (verificado por teste).
+
+### A categoria que só existe por causa de um erro
+
+A primeira versão do dataset era inteira de "pergunta curta → resposta". Treinado
+assim, o modelo funcionou bem em perguntas soltas e **falhou no fluxo real**:
+diante do prompt de produção — que tem quatro seções (contexto do paciente,
+pendências, alertas, trechos de protocolo) — ele *ecoou as seções de volta* em vez
+de responder.
+
+O diagnóstico é o mesmo princípio que vale para o chat template, aplicado um nível
+acima: **o formato de treino tem de ser o formato de inferência**. A correção foi
+[`data/contextualized.py`](../src/med_assist/data/contextualized.py), que monta
+exemplos com o **mesmo `ASSISTANT_PROMPT` do runtime**, preenchido com casos reais
+da base estruturada, e uma resposta de referência redigida por template a partir
+do que já foi apurado (alertas, pendências, conduta).
+
+Duas honestidades sobre esses exemplos:
+
+- A resposta de referência é **template, não redação humana** — supervisão fraca.
+  O que ela ensina é estrutura e ancoragem: resumir o caso, começar pelos alertas,
+  listar pendências, citar a fonte, fechar com o aviso de validação.
+- O módulo depende de `knowledge` e `assistant`, invertendo a direção usual da
+  arquitetura. É proposital: se o prompt do runtime mudar, o dataset acompanha.
+  Um gerador que reimplementasse o template voltaria a divergir na primeira
+  alteração — que é exatamente o defeito que ele existe para corrigir.
+
+### Deduplicação com chave explícita
+
+Esses exemplos quebraram o filtro de quase-duplicata: 25 dos 48 foram descartados,
+porque a estrutura da pergunta é intencionalmente idêntica e a variação está no
+conteúdo clínico. O filtro por shingles pressupõe pergunta em texto livre.
+
+A solução foi permitir que o exemplo declare sua própria `dedup_key`
+(`contextualizada:{paciente}:{foco}`): com ela, vale a igualdade exata da chave e
+o teste de shingles é dispensado. Sobraram 43 — os 5 restantes eram repetição
+verdadeira (mesmo paciente e mesmo foco sorteados).
 
 Relatórios reproduzíveis em [`results/eval/`](../results/eval/):
 `relatorio_anonimizacao.json`, `relatorio_curadoria.json`, `resumo_dataset.json`.
