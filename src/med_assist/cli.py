@@ -123,7 +123,8 @@ def cmd_finetune(args: argparse.Namespace) -> int:
         from .finetune.train import TrainConfig, train
         config = TrainConfig(base_model=args.base_model, epochs=args.epochs, lr=args.lr,
                              batch_size=args.batch_size, grad_accum=args.grad_accum,
-                             max_len=args.max_len, device=args.device, limit=args.limit)
+                             max_len=args.max_len, device=args.device, limit=args.limit,
+                             grad_checkpoint=not args.sem_grad_checkpoint)
         resumo = train(config)
         print(json.dumps({k: v for k, v in resumo.items() if k != "historico"},
                          ensure_ascii=False, indent=2))
@@ -209,6 +210,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_ft.add_argument("--grad-accum", type=int, default=8)
     p_ft.add_argument("--max-len", type=int, default=1024)
     p_ft.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda", "mps"])
+    p_ft.add_argument("--sem-grad-checkpoint", action="store_true",
+                      help="desliga o checkpointing de gradiente (mais rápido, mais memória)")
     p_ft.add_argument("--limit", type=int, default=None, help="limita exemplos (train) ou casos (evaluate)")
     p_ft.add_argument("--llama-cpp", help="caminho do repositório llama.cpp (para gguf)")
     p_ft.add_argument("--quant", default="Q4_K_M")

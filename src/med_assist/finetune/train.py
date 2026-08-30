@@ -56,6 +56,7 @@ class TrainConfig:
     lora_alpha: int = 32
     lora_dropout: float = 0.05
     device: str = "auto"
+    grad_checkpoint: bool = True
     limit: int | None = None
     seed: int = SEED
     log_every: int = 10
@@ -65,6 +66,21 @@ class TrainConfig:
         d = asdict(self)
         d.pop("historico", None)
         return {k: (str(v) if isinstance(v, Path) else v) for k, v in d.items()}
+
+
+def _resolve_dtype(device: str):
+    """Precisão dos pesos, conforme o que a GPU realmente suporta.
+
+    A T4 do Colab é Turing (compute 7.5) e **não tem bfloat16** — pedir bf16 ali
+    falha ou cai em emulação lentíssima. E fp16 puro, sem `GradScaler`, faz a loss
+    do LoRA divergir. Então: bf16 onde existe (Ampere+), fp32 no resto. Um modelo
+    de 1,5B em fp32 com LoRA e checkpointing de gradiente cabe nos 15 GB da T4.
+    """
+    import torch
+
+    if device == "cuda" and torch.cuda.is_bf16_supported():
+        return torch.bfloat16
+    return torch.float32
 
 
 def _resolve_device(escolha: str) -> str:
@@ -126,10 +142,9 @@ def train(config: TrainConfig) -> dict:
                 stats_treino["exemplos"], stats_treino["tokens_total"],
                 stats_treino["tokens_medio"], len(validacao))
 
-    modelo = AutoModelForCausalLM.from_pretrained(
-        config.base_model,
-        dtype=torch.float32 if device == "cpu" else torch.bfloat16,
-    )
+    dtype = _resolve_dtype(device)
+    logger.info("Precisão dos pesos: %s", str(dtype).replace("torch.", ""))
+    modelo = AutoModelForCausalLM.from_pretrained(config.base_model, dtype=dtype)
     modelo.config.use_cache = False
 
     lora = LoraConfig(
@@ -137,6 +152,14 @@ def train(config: TrainConfig) -> dict:
         bias="none", task_type="CAUSAL_LM", target_modules=list(TARGET_MODULES),
     )
     modelo = get_peft_model(modelo, lora)
+
+    # Em GPU, troca ~30% de tempo por uma queda grande de memória — é o que
+    # permite treinar o 1.5B em fp32 numa T4 sem estourar.
+    if config.grad_checkpoint and device != "cpu":
+        modelo.enable_input_require_grads()
+        modelo.gradient_checkpointing_enable()
+        logger.info("Checkpointing de gradiente habilitado")
+
     treinaveis = sum(p.numel() for p in modelo.parameters() if p.requires_grad)
     total = sum(p.numel() for p in modelo.parameters())
     logger.info("Parâmetros treináveis: %s de %s (%.2f%%)",
