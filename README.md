@@ -114,9 +114,10 @@ export LLM_MODEL=med-assist                    # padrão
 
 | Caminho | O que fazer | Tempo |
 |---|---|---|
+| **Baixar o adapter treinado** | [release v1.0](https://github.com/otaviano/fiap-tech-challenge-fase3/releases/tag/v1.0-0.5b) → `unzip` em `models/` → `merge` → `gguf` | ~5 min |
 | Nenhum | não fazer nada — o assistente roda em modo contingência, com resposta citada e auditável | 0 |
 | Treinar em CPU | `med-assist finetune train` → `merge` → `gguf` | ~60 min |
-| Treinar em GPU | [`notebooks/finetune_colab.ipynb`](notebooks/finetune_colab.ipynb) na T4 gratuita | ~10 min |
+| Treinar em GPU | [`notebooks/finetune_colab.ipynb`](notebooks/finetune_colab.ipynb) na T4 gratuita | ~20 min |
 
 O pipeline gera `med-assist-f16.gguf` (~950 MB). A quantização para Q4_K_M é
 **opcional** e exige o binário `llama-quantize` compilado no seu llama.cpp
