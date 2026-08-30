@@ -168,3 +168,22 @@ def test_detecta_codigo_de_protocolo_fabricado():
 def test_codigo_valido_nao_e_sinalizado():
     assert guardrails.check_hallucinated_context(
         "Conforme o PROT-PNE-006 v3.1, calcular CURB-65.", tem_paciente=False) == []
+
+
+def test_citacao_do_protocolo_secundario_e_sinalizada():
+    """Regressão medida na v5: a regra 'culturas antes do antibiótico'
+    (PROT-EME-002, trecho mais relevante) saiu atribuída ao PROT-END-004,
+    recuperado com score baixo. O código existe e estava no contexto — só as
+    verificações anteriores não bastam para pegar fonte trocada."""
+    motivos = guardrails.check_citations(
+        "Não: o PROT-END-004 recomenda coletar culturas antes do antibiótico.",
+        protocolos_recuperados={"PROT-EME-002", "PROT-END-004", "PROT-PNE-006"},
+        protocolo_mais_relevante="PROT-EME-002")
+    assert "citacao_ignora_trecho_mais_relevante:PROT-EME-002" in motivos
+
+
+def test_citacao_do_trecho_principal_nao_e_sinalizada():
+    assert guardrails.check_citations(
+        "Conforme o PROT-EME-002 v6.0, colher hemoculturas antes do antibiótico.",
+        protocolos_recuperados={"PROT-EME-002", "PROT-END-004"},
+        protocolo_mais_relevante="PROT-EME-002") == []

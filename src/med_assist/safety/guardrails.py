@@ -197,7 +197,8 @@ PADRAO_VERSAO = re.compile(r"(PROT-[A-Z]{3}-\d{3})\s+v(\d+\.\d+)")
 PADRAO_REVISAO = re.compile(r"(PROT-[A-Z]{3}-\d{3})[^\n]{0,40}?revisão\s+(\d{4}-\d{2}-\d{2})", re.I)
 
 
-def check_citations(resposta: str, protocolos_recuperados: set[str]) -> list[str]:
+def check_citations(resposta: str, protocolos_recuperados: set[str],
+                    protocolo_mais_relevante: str | None = None) -> list[str]:
     """Confere se o que o modelo citou existe e bate com os metadados reais.
 
     Motivação medida: o modelo fine-tunado de 0,5B escreveu
@@ -231,6 +232,16 @@ def check_citations(resposta: str, protocolos_recuperados: set[str]) -> list[str
         protocolo = PROTOCOLOS_POR_CODIGO.get(codigo)
         if protocolo and revisao != protocolo.revisao:
             motivos.append(f"revisao_divergente:{codigo}:{revisao}!={protocolo.revisao}")
+
+    # Fonte trocada: o modelo cita um protocolo que de fato foi recuperado, mas
+    # não o que sustenta a afirmação. Medido na v5 — a regra "culturas antes do
+    # antibiótico" (PROT-EME-002, trecho mais relevante, score 7,07) saiu
+    # atribuída ao PROT-END-004, recuperado com score 2,49. As verificações
+    # anteriores não pegam: o código existe e estava no contexto.
+    # Sinal de auditoria, não bloqueio: citar um trecho secundário às vezes é
+    # legítimo, e é a ausência do principal que chama atenção.
+    if protocolo_mais_relevante and citados and protocolo_mais_relevante not in citados:
+        motivos.append(f"citacao_ignora_trecho_mais_relevante:{protocolo_mais_relevante}")
 
     # A mesma citação errada costuma aparecer várias vezes na mesma resposta;
     # a auditoria registra o problema, não a contagem de repetições.

@@ -88,17 +88,18 @@ nunca vê uma resposta interna sem fonte.
 |---|---|---|
 | `protocolo_qa` | 120 | conteúdo dos protocolos, seção a seção, sempre com fonte |
 | `conhecimento_geral` | 195 | registro de resposta clínica geral (MedQuAD, inglês) |
-| `consulta_contextualizada` | 43 | responder ao **formato real do prompt de produção** |
+| `consulta_contextualizada` | 43 | responder ao **formato real do prompt de produção** (caminho com prontuário) |
+| `consulta_geral` | 20 | responder ao prompt de produção **sem prontuário** |
 | `documento` | 24 | formato dos modelos institucionais de laudo, receita e procedimento |
 | `faq` | 20 | dúvidas de plantão, com a resposta ancorada em protocolo |
 | `faq_contextualizada` | 12 | mesma dúvida aplicada a um caso concreto |
 | `limite_de_atuacao` | 15 | recusa de ato médico, com a alternativa oferecida |
 
-Split estratificado por categoria: **365 exemplos de treino, 64 de validação** —
+Split estratificado por categoria: **382 exemplos de treino, 67 de validação** —
 a validação tem a mesma composição do treino, e nenhuma pergunta aparece nos dois
 lados (verificado por teste).
 
-### A categoria que só existe por causa de um erro
+### As duas categorias que só existem por causa de erros
 
 A primeira versão do dataset era inteira de "pergunta curta → resposta". Treinado
 assim, o modelo funcionou bem em perguntas soltas e **falhou no fluxo real**:
@@ -112,6 +113,13 @@ acima: **o formato de treino tem de ser o formato de inferência**. A correção
 exemplos com o **mesmo `ASSISTANT_PROMPT` do runtime**, preenchido com casos reais
 da base estruturada, e uma resposta de referência redigida por template a partir
 do que já foi apurado (alertas, pendências, conduta).
+
+**A segunda metade da lição veio depois.** Com os exemplos contextualizados, o
+modelo aprendeu a abrir toda resposta com "Resumo do caso" — e, numa pergunta
+geral, **sem paciente nenhum**, inventou um: *"Paciente de 60 anos, homem"*, com
+código de protocolo fabricado junto. Faltava cobrir o **caminho sem prontuário**
+do grafo, que existe no runtime e não existia no treino. Daí `consulta_geral`, com
+o prompt que o nó `recuperar_protocolo` monta quando não há paciente.
 
 Duas honestidades sobre esses exemplos:
 

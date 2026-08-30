@@ -112,6 +112,20 @@ foi de fato recuperado, e registra as divergências na auditoria
 Detectou 100% dos casos. O bloco de fontes gerado pelos nós continua ao lado da
 resposta como referência autoritativa.
 
+### Caso clínico inventado e código fabricado
+
+Numa consulta **sem prontuário**, o modelo abriu com "Paciente de 60 anos, homem"
+e citou "(PRONE-006)" — paciente e código inexistentes, em texto de aparência
+institucional. Nenhuma verificação anterior pegava: não havia PII, havia citação,
+e o código falso escapa do padrão de protocolo por ser falso.
+
+`check_hallucinated_context()` sinaliza afirmação sobre paciente quando não há
+paciente no contexto (`paciente_inexistente_na_resposta`) e código com cara de
+protocolo fora do padrão (`codigo_de_protocolo_malformado`). E
+`citacao_ignora_trecho_mais_relevante` registra quando a resposta cita protocolos
+sem citar o mais relevante recuperado — o caso da fonte trocada, em que o código
+existe e estava no contexto, mas não é o que sustenta a afirmação.
+
 ## 6. Alertas: por que não são gerados
 
 Alerta é o tipo de saída em que alucinação custa caro nos dois sentidos — um

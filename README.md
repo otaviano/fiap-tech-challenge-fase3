@@ -37,7 +37,7 @@ são sintéticos e autorais.
 | Relatório técnico | [RELATORIO_TECH_CHALLENGE_FASE3.md](RELATORIO_TECH_CHALLENGE_FASE3.md) |
 | Diagrama do fluxo | [`docs/arquitetura.md`](docs/arquitetura.md), [`docs/fluxo-langgraph.mmd`](docs/fluxo-langgraph.mmd) |
 | Avaliação do modelo e análise | [relatório §6](RELATORIO_TECH_CHALLENGE_FASE3.md) + [`results/eval/`](results/eval/) |
-| Testes automatizados | [`tests/`](tests/) — 76 testes |
+| Testes automatizados | [`tests/`](tests/) — 84 testes |
 
 ---
 
@@ -104,6 +104,11 @@ llama-server -m models/med-assist-Q4_K_M.gguf --alias med-assist --port 8080
 export LLM_BASE_URL=http://localhost:8080/v1   # padrão
 export LLM_MODEL=med-assist                    # padrão
 ```
+
+O modelo desta fase foi treinado em CPU nesta máquina (Qwen2.5-0.5B + LoRA,
+59 min): perplexidade de validação **9,60 → 3,19**, citação de fonte **0% → 100%**
+e recusa indevida **25% → 0%**. Cinco rodadas, e o que cada uma ensinou está na
+[seção 6 do relatório](RELATORIO_TECH_CHALLENGE_FASE3.md).
 
 > **Sem servidor no ar, tudo continua funcionando.** O assistente cai num redator
 > determinístico que monta a resposta a partir do protocolo recuperado, das

@@ -1,0 +1,134 @@
+{
+  "config": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "output_dir": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/models/med-assist-lora",
+    "train_file": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/data/processed/train.jsonl",
+    "val_file": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/data/processed/val.jsonl",
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum": 8,
+    "max_len": 2048,
+    "warmup_ratio": 0.06,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "device": "auto",
+    "limit": null,
+    "seed": 42,
+    "log_every": 10
+  },
+  "device": "cpu",
+  "parametros_treinaveis": 8798208,
+  "parametros_totais": 502830976,
+  "percentual_treinavel": 1.75,
+  "dataset": {
+    "exemplos": 382,
+    "tokens_total": 195683,
+    "tokens_medio": 512.3,
+    "tokens_p50": 406,
+    "tokens_p95": 1566,
+    "tokens_max": 2046,
+    "por_categoria": {
+      "conhecimento_geral": 166,
+      "consulta_contextualizada": 37,
+      "consulta_geral": 17,
+      "documento": 20,
+      "faq": 17,
+      "faq_contextualizada": 10,
+      "limite_de_atuacao": 13,
+      "protocolo_qa": 102
+    }
+  },
+  "validacao": 67,
+  "passos": 94,
+  "duracao_s": 3558.2,
+  "metricas_iniciais": {
+    "val_loss": 2.2612,
+    "val_perplexity": 9.595
+  },
+  "metricas_finais": {
+    "epoca": 2,
+    "passo": 94,
+    "train_loss_epoca": 1.0259,
+    "val_loss": 1.1608,
+    "val_perplexity": 3.192
+  },
+  "historico": [
+    {
+      "epoca": 0,
+      "passo": 0,
+      "val_loss": 2.2612,
+      "val_perplexity": 9.595
+    },
+    {
+      "epoca": 1,
+      "passo": 10,
+      "train_loss": 2.2848,
+      "lr": 0.0001985138989016874
+    },
+    {
+      "epoca": 1,
+      "passo": 20,
+      "train_loss": 1.7847,
+      "lr": 0.00018688879687250067
+    },
+    {
+      "epoca": 1,
+      "passo": 30,
+      "train_loss": 1.5673,
+      "lr": 0.00016501040936687443
+    },
+    {
+      "epoca": 1,
+      "passo": 40,
+      "train_loss": 1.43,
+      "lr": 0.00013546048870425356
+    },
+    {
+      "epoca": 1,
+      "passo": 47,
+      "train_loss_epoca": 1.7085,
+      "val_loss": 1.2951,
+      "val_perplexity": 3.651
+    },
+    {
+      "epoca": 2,
+      "passo": 50,
+      "train_loss": 0.3366,
+      "lr": 0.00010172606409053886
+    },
+    {
+      "epoca": 2,
+      "passo": 60,
+      "train_loss": 1.1168,
+      "lr": 6.778795582015097e-05
+    },
+    {
+      "epoca": 2,
+      "passo": 70,
+      "train_loss": 1.1004,
+      "lr": 3.7651019814126654e-05
+    },
+    {
+      "epoca": 2,
+      "passo": 80,
+      "train_loss": 1.0247,
+      "lr": 1.4871555841564887e-05
+    },
+    {
+      "epoca": 2,
+      "passo": 90,
+      "train_loss": 0.9777,
+      "lr": 2.137647470404469e-06
+    },
+    {
+      "epoca": 2,
+      "passo": 94,
+      "train_loss_epoca": 1.0259,
+      "val_loss": 1.1608,
+      "val_perplexity": 3.192
+    }
+  ],
+  "adapter": "/home/otavianomontes/source/repos/fiap-tech-challenge-fase3/models/med-assist-lora"
+}

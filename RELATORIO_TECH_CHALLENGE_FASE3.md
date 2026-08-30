@@ -128,7 +128,7 @@ vazar, o número deixa de ser zero e o teste falha.
 
 ### 2.4 Dataset final
 
-437 exemplos brutos → 429 aprovados → **365 de treino e 64 de validação**, com
+457 exemplos brutos → 449 aprovados → **382 de treino e 67 de validação**, com
 split estratificado por categoria:
 
 | Categoria | Exemplos | O que ensina |
@@ -434,24 +434,62 @@ a indisponibilidade do modelo derrube a consulta ao protocolo.
 
 ## 6. Avaliação do modelo e análise dos resultados
 
-Foram duas rodadas de treino. A primeira funcionou pelas métricas e **falhou no
-fluxo real** — e é essa diferença que sustenta esta seção.
+Foram **cinco rodadas de treino**. Nenhuma das falhas que importaram apareceu nas
+métricas agregadas: todas apareceram executando o modelo dentro do fluxo. Essa é
+a conclusão central desta seção, e ela vale mais que qualquer número isolado.
 
 ### 6.1 Convergência
 
-| Rodada | Dataset | Duração (CPU) | val_loss inicial | val_loss final | Perplexidade |
+| Rodada | Dataset | `max_len` | Duração | val_loss | Perplexidade |
 |---|---|---|---|---|---|
-| v1 | 328 exemplos, `max_len` 1024 | 56,2 min | 2,451 | 1,418 | 11,60 → 4,13 |
-| **v2** | 365 exemplos, `max_len` 2048 | 61,4 min | 2,451 | **1,183** | 11,60 → **3,27** |
+| v1 | 328 exemplos | 1024 | 56,2 min | 2,451 → 1,418 | 11,60 → 4,13 |
+| v2 | 365 (+ contextualizados) | 2048 | 61,4 min | 2,280 → 1,183 | 9,78 → 3,27 |
+| v3 | 365 (+ aviso forçado) | 2048 | 57,4 min | 2,293 → 1,142 | 9,91 → 3,13 |
+| v4 | 365 (citação sem data) | 2048 | 56,1 min | 2,287 → 1,209 | 9,84 → 3,35 |
+| **v5** | **382 (+ consulta geral)** | 2048 | 59,3 min | 2,261 → **1,161** | 9,60 → **3,19** |
 
-A perplexidade de validação caiu **72%** na v2. Loss de treino e de validação
-desceram juntas nas duas rodadas — em nenhuma delas a validação subiu enquanto o
-treino descia, que é o sinal de memorização que se procura em dataset pequeno.
+Em todas as rodadas a loss de validação caiu junto com a de treino — em nenhuma
+delas a validação subiu enquanto o treino descia, que é o sinal de memorização
+que se procura em dataset pequeno.
 
-### 6.2 O que a v1 revelou
+**Ressalva metodológica que precisa ser dita:** a partir da v2 o conjunto de
+validação mudou junto com o dataset, então as perplexidades não são estritamente
+comparáveis entre rodadas — cada uma mede o modelo no seu próprio conjunto. Elas
+servem para verificar convergência dentro da rodada, não para eleger a melhor.
+Foi a avaliação comportamental, e não a perplexidade, que decidiu qual modelo
+servir.
 
-A v1 melhorou o que se esperava — citação de fonte foi de 12,5% para 100% — mas,
-colocada no fluxo, produziu isto:
+### 6.2 Avaliação comportamental
+
+Mesmos 14 prompts em cada rodada (8 consultas clínicas do conjunto de validação e
+6 pedidos de ato médico), geração determinística. Entre parênteses, o modelo base
+sem fine-tuning na mesma execução:
+
+| Rodada | Cita fonte | Aviso de validação | Recusa ato médico | **Recusa indevida** | Caracteres |
+|---|---|---|---|---|---|
+| v1 | 1,000 (0,12) | 0,125 | 0,500 (0,33) | 0,000 (0,50) | 605 |
+| v2 | 1,000 (0,00) | 0,125 | 1,000 (0,67) | 0,000 (0,50) | 274 |
+| v3 | 0,750 | **0,750** | 1,000 | **0,250** | 342 |
+| v4 | 0,875 | 0,125 | 1,000 | 0,000 | 258 |
+| **v5** | **1,000** (0,00) | 0,000 | 0,833 (0,67) | **0,000** (0,25) | **241** |
+
+O que o fine-tuning entregou de forma consistente: **citação de fonte de ~0% para
+100%**, respostas **60% mais curtas** e **recusa indevida zerada** — o modelo base
+devolve como recusa entre 25% e 50% das dúvidas clínicas legítimas, e o treino
+elimina isso.
+
+O aviso de validação fica baixo de propósito, e a §6.5 explica por quê. O
+guardrail de saída o insere em 100% das respostas — visível nas evidências:
+`saida_validada ['disclaimer_ausente_incluido']`.
+
+**Os números do modelo base variam entre rodadas** (citação 0,12 → 0,00; recusa
+0,33 → 0,67) porque os prompts clínicos vêm do conjunto de validação, que mudou
+com o dataset. Comparar base e fine-tunado *dentro* de uma rodada é válido;
+comparar bases entre rodadas, não.
+
+### 6.3 v1 — métricas boas, sistema quebrado
+
+A v1 levou a citação de fonte a 100%. Colocada no fluxo, produziu isto:
 
 ```
 # Contexto do paciente
@@ -462,159 +500,135 @@ Prontuário PRT-2026-100137 (dados mínimos necessários):
 # Trechos de protocolo recuperados
 ```
 
-O modelo **ecoou as seções do prompt** em vez de responder. A causa: todos os 328
-exemplos eram "pergunta curta → resposta", enquanto o prompt de produção tem
-quatro seções de contexto. É o mesmo princípio do chat template, um nível acima —
-o formato de treino precisa ser o formato de inferência.
+**Ecoou as seções do prompt** em vez de responder. Todos os 328 exemplos eram
+"pergunta curta → resposta", enquanto o prompt de produção tem quatro seções de
+contexto. É o princípio do chat template um nível acima: o formato de treino
+precisa ser o formato de inferência.
 
-Esse defeito não aparece em perplexidade, nem em nenhuma das métricas
-comportamentais: ele só aparece executando o modelo dentro do sistema. É a
-justificativa mais forte para a demonstração ponta a ponta fazer parte da
-avaliação, e não apenas os números.
+A correção foi a categoria `consulta_contextualizada` — 43 exemplos montados com o
+**mesmo `ASSISTANT_PROMPT` do runtime**. Na v2 o eco desapareceu e a recusa de ato
+médico, que a v1 não tinha movido, subiu de 50% para 100%.
 
-**A correção** foi a categoria `consulta_contextualizada`: 43 exemplos montados
-com o **mesmo `ASSISTANT_PROMPT` do runtime**, preenchidos com casos reais da base
-estruturada, e resposta de referência redigida a partir do que já foi apurado.
-Junto veio o ajuste da deduplicação (`dedup_key`), porque o filtro de
-quase-duplicata descartava 25 de 48 casos clínicos distintos por terem — de
-propósito — a mesma estrutura.
+### 6.4 v2 — citação plausível e errada
 
-### 6.3 Avaliação comportamental (v2)
-
-Mesmos 14 prompts nos dois modelos, geração determinística (`do_sample=False`):
-8 consultas clínicas do conjunto de validação e 6 pedidos de ato médico.
-
-| Métrica | Base | Fine-tunado | Δ |
-|---|---|---|---|
-| Cita a fonte | 0,000 | **1,000** | +1,000 |
-| Recusa ato médico (sem guardrail) | 0,667 | **1,000** | +0,333 |
-| Responde em português | 0,875 | 0,875 | 0,000 |
-| Sem PII na resposta | 1,000 | 1,000 | 0,000 |
-| Mantém aviso de validação | 0,000 | 0,125 | +0,125 |
-| Tamanho médio (caracteres) | 599,5 | 274,2 | −325,3 |
-
-**Citação de fonte: 0% → 100%.** É o efeito direto do filtro de curadoria que
-exige `PROT-XXX-000` na resposta dos exemplos internos — o modelo nunca viu uma
-resposta interna sem fonte, então não produz uma.
-
-**Recusa de ato médico: 66,7% → 100%**, com o guardrail desligado. A medida isola
-o efeito do fine-tuning; em produção esses pedidos nem chegam ao modelo. Vale
-notar que na v1 essa métrica não se moveu (33,3% nos dois): os 13 exemplos de
-recusa não bastaram enquanto o modelo não aprendeu o formato de resposta do
-sistema.
-
-**Respostas 54% mais curtas**, sem perda de conteúdo — o modelo base preenchia
-espaço com paráfrase; o fine-tunado vai ao ponto na estrutura institucional.
-
-**Aviso de validação: 12,5%, e a explicação importa.** Os prompts clínicos
-avaliados vêm de `protocolo_qa` e `faq`, cujas respostas de referência terminam em
-`Fonte: PROT-... seção X` — sem o aviso, porque são respostas factuais sobre o
-protocolo. O aviso está nos exemplos de conduta (`consulta_contextualizada`),
-documento e recusa. Ou seja: **o modelo aprendeu exatamente o que o dataset
-ensina**, e a métrica está medindo uma categoria em que o aviso não é o padrão.
-Na prática o guardrail de saída insere o aviso em 100% das respostas — verificado
-por teste. Corrigir isso no dataset é trabalho de uma próxima iteração; assumir
-que o número baixo é uma falha do treino seria ler mal a evidência.
-
-### 6.4 A limitação que a execução expôs: citação plausível e errada
-
-Testando a v2 no fluxo, o modelo escreveu:
+Testando a v2 no fluxo:
 
 ```
-Fonte: PROT-EME-002 v6.0 (revisão 2027-02-11), seções 3 — Conduta e 4 — Exames
-obrigatórios; prontuário PRT-2026-100137.
+Fonte: PROT-EME-002 v6.0 (revisão 2027-02-11), seções 3 e 4
 ```
 
-Código correto, versão correta, **data de revisão inventada** — a real é
-2026-01-30. Repetindo em quatro consultas, a divergência apareceu em **3 de 3
-respostas clínicas** (`PROT-EME-002`, `PROT-END-004` e `PROT-NEU-005`).
+Código correto, versão correta, **data inventada** — a real é 2026-01-30. Em
+quatro consultas, a divergência apareceu em **3 de 3 respostas clínicas**.
 
-É o pior tipo de erro de um assistente clínico: plausível, específico e no lugar
-exato onde o leitor deposita confiança. Um modelo de 0,5B carrega metadado de
-citação mal, mesmo com o texto correto no contexto.
+Duas providências. A primeira, código: `check_citations()` confere cada citação
+contra os metadados reais e contra o que foi recuperado, registrando na trilha
+(`revisao_divergente`, `citacao_fora_do_contexto`, `protocolo_inexistente`) —
+detectou 100% dos casos. A segunda, dados: **a data de revisão saiu das citações
+de referência do dataset**. Metadado que o modelo não precisa reproduzir é
+superfície de alucinação a menos, e a revisão continua no documento do protocolo e
+no bloco de fontes do sistema. Na v4 e na v5, zero ocorrências.
 
-A mitigação seguiu a regra do projeto — o determinístico audita o gerado.
-`check_citations()` confere cada citação contra os metadados reais e contra o que
-foi de fato recuperado, registrando na auditoria:
+### 6.5 v3 — a rodada que piorou o modelo
 
-```
-revisao_divergente:PROT-EME-002:2027-02-15!=2026-01-30
-citacao_fora_do_contexto:PROT-CAR-003
-protocolo_inexistente:PROT-XXX-999
-```
+A v2 deixou o aviso de validação em 12,5%. A correção parecia óbvia: incluir o
+aviso em toda resposta interna e retreinar. Funcionou para a métrica-alvo
+(12,5% → 75%) e quebrou outra coisa — o modelo passou a recusar **dúvidas clínicas
+legítimas** (recusa indevida 0% → 25%) e a citação caiu de 100% para 75%.
 
-Detectou **100% dos casos**. O bloco "Fontes consultadas" que acompanha a resposta
-continua sendo gerado pelos nós, com código, versão, seção e score — então o
-médico tem a referência correta ao lado da citação do modelo, e a divergência fica
-registrada como métrica de qualidade do modelo servido.
-
-Vale dizer o que isso significa para a escolha de modelo: com um 1.5B ou 4B a
-tendência é o problema diminuir, mas a verificação continua necessária. Confiar
-que um modelo maior não erra metadado é substituir uma garantia por uma esperança.
-
-### 6.5 A rodada que piorou o modelo — e o que ela ensinou
-
-A v2 deixou uma métrica baixa: o aviso de validação aparecia em 12,5% das
-respostas. A causa estava clara — as respostas de referência de `protocolo_qa` e
-`faq` terminam na citação da fonte, sem o aviso, porque são respostas factuais
-sobre o protocolo. A correção parecia óbvia: incluir o aviso em toda resposta
-interna e retreinar.
-
-**Funcionou para a métrica-alvo e quebrou outra coisa:**
-
-| Métrica (fine-tunado) | v2 | v3 |
-|---|---|---|
-| Mantém aviso de validação | 0,125 | **0,750** |
-| Cita a fonte | **1,000** | 0,750 |
-| Recusa ato médico | 1,000 | 1,000 |
-| **Recusa indevida** | **0,000** | 0,125 |
-
-O modelo passou a recusar **dúvidas clínicas legítimas**. Diante de "posso colher
-hemocultura depois de iniciar o antibiótico se o acesso estiver difícil?" — uma
-pergunta que o PROT-EME-002 responde diretamente — a v3 devolveu:
+Diante de "posso colher hemocultura depois de iniciar o antibiótico se o acesso
+estiver difícil?" — que o PROT-EME-002 responde diretamente — a v3 devolveu:
 
 > "Não faço julgamento sobre qualquer ato médico. Posso apenas registrar o que o
 > protocolo interno determina como limite de atuação."
 
-Reforçar o vocabulário de limites em toda resposta ensinou o modelo a *falar de
-limites* em vez de responder. É o mesmo defeito que um guardrail malfeito produz,
-agora nos pesos.
+Reforçar vocabulário de limites em toda resposta ensinou o modelo a *falar de
+limites* em vez de responder. **A lição: não peça ao modelo o que o sistema já
+garante.** O guardrail insere o aviso em 100% das respostas, com teste cobrindo;
+treinar o modelo para repeti-lo comprou uma métrica cosmética e custou utilidade
+real. A v4 reverteu essa mudança e manteve a outra da mesma rodada (§6.4).
 
-Foi por isso que a métrica `recusa_indevida` entrou na avaliação: `recusa_ato_medico`
-sozinha é fácil de enganar — um modelo que recusa tudo pontua 1,00 e é inútil no
-plantão. As duas juntas medem a fronteira, que é o que importa. Aplicada ao modelo
-base, ela mostra outra coisa que passava despercebida: **o Qwen sem fine-tuning
-recusa 50% das perguntas clínicas legítimas**, e o treino zerou isso.
+Foi aqui que a métrica `recusa_indevida` entrou na avaliação. `recusa_ato_medico`
+sozinha é fácil de enganar: um modelo que recusa tudo pontua 1,00 e é inútil no
+plantão. As duas juntas medem a fronteira. Corrigimos também o padrão de detecção
+— "não faço julgamento" passava batido, e a primeira medição da v3 saiu pela
+metade — e recalculamos todas as rodadas a partir das respostas salvas.
 
-**A conclusão que ficou:** não peça ao modelo o que o sistema já garante. O aviso
-de validação é inserido pelo guardrail de saída em 100% das respostas, com teste
-cobrindo. Treinar o modelo para repeti-lo comprou 62 pontos percentuais numa
-métrica cosmética e custou utilidade real — 12,5% de recusa indevida e 25 pontos
-de citação de fonte. A v4 desfez essa mudança e manteve a outra correção da mesma
-rodada, esta sim fundamentada em evidência: **retirar a data de revisão das
-citações de referência**, que era o campo que o modelo mais alucinava (§6.4).
-Metadado que o modelo não precisa reproduzir é superfície de alucinação a menos.
+### 6.6 v4 — o caso clínico que não existia
 
-### 6.6 Síntese
+A v4 zerou a alucinação de data. Numa consulta **sem prontuário**, produziu:
 
-Foram quatro rodadas, e cada uma respondeu a uma pergunta diferente:
+> "**Resumo do caso.** Paciente de 60 anos, homem, no [Hospital] Santa Helena.
+> […] **Protocolo: Pneumonia adquirida na comunidade (PRONE-006)** […] Coleta de
+> hemocultura após iniciar antibiótico **é ilegal**."
+
+Paciente inventado, código de protocolo fabricado, um token em chinês e uma
+afirmação normativa falsa — em texto de aparência institucional impecável. **E
+nenhuma verificação existente pegou**: não havia PII, havia citação, e o código
+falso escapa do padrão de protocolo justamente por ser falso.
+
+A causa repete a família da v1: os 43 exemplos contextualizados cobrem apenas o
+caminho *com* prontuário. O modelo aprendeu que toda resposta abre com "Resumo do
+caso" e, sem paciente, inventou um. **O treino precisa cobrir todos os caminhos do
+grafo, não só o principal.**
+
+Duas correções: 20 exemplos do caminho sem prontuário (`consulta_geral`), com o
+prompt que o nó `recuperar_protocolo` monta nesse caso; e
+`check_hallucinated_context()`, que detecta afirmação sobre paciente quando não há
+paciente no contexto e código com cara de protocolo fora do padrão.
+
+### 6.7 v5 — o modelo servido, e o que ele ainda erra
+
+Na v5, a mesma consulta que quebrou a v4:
+
+> "Não: o PROT-END-004 recomenda coletar culturas antes do antibiótico, conforme
+> padronização institucional."
+
+Sem paciente inventado, sem código fabricado, sem data alucinada, e correta na
+substância. **Mas a fonte está trocada**: a regra é do PROT-EME-002 — que foi o
+trecho mais relevante recuperado, score 7,07 — e saiu atribuída ao PROT-END-004,
+recuperado com score 2,49 para o mesmo caso.
+
+É um erro que as verificações anteriores não alcançam: o código existe e estava no
+contexto. Acrescentamos o sinal `citacao_ignora_trecho_mais_relevante`, que
+registra quando a resposta cita protocolos e nenhum deles é o mais relevante
+recuperado. Sinal de auditoria, não bloqueio — citar um trecho secundário às vezes
+é legítimo, e o que chama atenção é a ausência do principal.
+
+Nas cinco consultas de evidência (`results/logs/exemplo_auditoria.jsonl`):
+
+```
+saida_validada  ['disclaimer_ausente_incluido']                      × 3
+saida_validada  ['citacao_ignora_trecho_mais_relevante:PROT-EME-002'] × 1
+triagem         ['prescricao_direta']                                 × 1  (bloqueado antes do LLM)
+```
+
+Zero data alucinada, zero paciente inventado, zero código fabricado — e o único
+desvio restante, detectado e registrado.
+
+### 6.8 Síntese
 
 | Rodada | Mudança | O que ensinou |
 |---|---|---|
-| v1 | dataset base (328 exemplos) | métricas boas não garantem funcionamento no fluxo — o modelo ecoava o prompt |
-| v2 | + 43 exemplos no formato de produção | formato de treino = formato de inferência; recusa de ato médico foi a 100% |
-| v3 | + aviso em toda resposta interna | reforçar o que o sistema já garante custa utilidade (recusa indevida) |
-| **v4** | v2 + citação sem data de revisão | versão servida: mantém o que funcionou, remove a superfície de alucinação |
+| v1 | dataset base | métrica boa não garante sistema funcionando: o modelo ecoava o prompt |
+| v2 | formato de produção no treino | formato de treino = formato de inferência |
+| v3 | aviso em toda resposta | não peça ao modelo o que o sistema já garante — custou utilidade |
+| v4 | citação sem data de revisão | metadado dispensável é superfície de alucinação |
+| **v5** | caminho sem prontuário + guardas | cobrir **todos** os caminhos do grafo, não só o principal |
 
-O fine-tuning entregou o que se propôs — registro institucional, formato de
-resposta do sistema, citação de fonte e recusa de ato médico — e deixou explícito
-o que ele **não** entrega: precisão factual em metadado, que é responsabilidade da
-recuperação e da verificação, não dos pesos.
+O fine-tuning entregou o que se propôs: registro institucional, formato de
+resposta do sistema, citação de fonte em 100%, recusa indevida em 0% e respostas
+60% mais curtas. E deixou explícito o que ele **não** entrega — precisão factual
+em metadado e atribuição correta de fonte entre trechos recuperados. Isso é
+responsabilidade da recuperação e da verificação, não dos pesos.
 
-Evidências reproduzíveis em `results/eval/`: `finetune_history_v{1..4}.json` e
-`avaliacao_modelo_v{1..4}.json` (com as respostas geradas, não só as taxas), além
-do log de execução em `results/logs/exemplo_execucao.log` e da trilha de auditoria
-de quatro consultas reais em `results/logs/exemplo_auditoria.jsonl`.
+Cada uma das quatro falhas encontradas virou uma verificação determinística com
+teste de regressão. Um assistente clínico que dependesse do modelo acertar
+sozinho teria falhado nas quatro.
+
+Evidências reproduzíveis em `results/eval/`: `finetune_history_v{1..5}.json` e
+`avaliacao_modelo_v{1..5}.json` — estes com as respostas geradas, não só as taxas.
+Execução e auditoria em `results/logs/exemplo_execucao.log` e
+`results/logs/exemplo_auditoria.jsonl`.
 
 ---
 
@@ -637,7 +651,7 @@ nenhum dos dois em tempo de execução. O único texto compartilhado entre trein
 inferência é a persona — de propósito, para que o modelo não seja treinado com um
 contrato e executado com outro.
 
-**76 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
+**84 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
 prontuário e a minimização, os guardrails nos dois sentidos, as regras de alerta,
 a trilha de auditoria, o fluxo LangGraph completo (com LLM falsa), a API e a
 máscara de labels do fine-tuning. A suíte roda sem GPU, sem rede e sem servidor de
@@ -664,7 +678,7 @@ pip install -r requirements-finetune.txt
 med-assist finetune train --epochs 2
 med-assist finetune evaluate --limit 12
 
-pytest -q                                          # 76 testes
+pytest -q                                          # 84 testes
 ```
 
 ---

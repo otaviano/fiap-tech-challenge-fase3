@@ -227,8 +227,11 @@ def no_validar_saida(estado: EstadoClinico) -> dict:
         # O modelo pode citar um protocolo que não foi recuperado, ou acertar o
         # código e errar a versão/revisão. A conferência é contra os metadados
         # reais; o bloco de fontes abaixo continua sendo a referência do sistema.
-        recuperados = {t["protocolo"] for t in estado.get("trechos", [])}
-        veredito.motivos.extend(guardrails.check_citations(resposta_final, recuperados))
+        trechos = estado.get("trechos", [])
+        recuperados = {t["protocolo"] for t in trechos}
+        mais_relevante = trechos[0]["protocolo"] if trechos else None
+        veredito.motivos.extend(
+            guardrails.check_citations(resposta_final, recuperados, mais_relevante))
         veredito.motivos.extend(guardrails.check_hallucinated_context(
             resposta_final, tem_paciente=bool(estado.get("contexto"))))
         resposta_final = resposta_final + "\n" + explicacao.render()
