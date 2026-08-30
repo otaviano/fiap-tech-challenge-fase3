@@ -4,3 +4,5 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  59%|█████▉    | 172/290 [00:00<00:00, 1674.44it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1900.35it/s]
 2026-08-29 21:56:18 | INFO    | med_assist.finetune | Parâmetros treináveis: 8,798,208 de 502,830,976 (1.75%)
 2026-08-29 21:58:14 | INFO    | med_assist.finetune | Antes do treino: {'val_loss': 2.451, 'val_perplexity': 11.6}
+2026-08-29 22:05:37 | INFO    | med_assist.finetune | época 1 | passo 10/82 | loss 2.3984 | lr 1.97e-04
+2026-08-29 22:12:23 | INFO    | med_assist.finetune | época 1 | passo 20/82 | loss 1.8386 | lr 1.80e-04

@@ -6,7 +6,7 @@ mesmo `llama-server` que a Fase 2 já usava. O que muda entre as fases é o mode
 servido — a infraestrutura de inferência é a mesma.
 
     med-assist finetune merge
-    med-assist finetune gguf --llama-cpp ~/zibetti-lab/llama.cpp --quant Q4_K_M
+    med-assist finetune gguf --llama-cpp ~/llama.cpp --quant Q4_K_M
     llama-server -m models/med-assist-Q4_K_M.gguf --alias med-assist --port 8080
 
 Por que fundir em vez de servir base + adapter: o llama.cpp carrega um GGUF
@@ -17,6 +17,7 @@ assina e promove entre ambientes.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -65,7 +66,7 @@ def to_gguf(merged_dir: Path = DEFAULT_MERGED, llama_cpp: Path | None = None,
             quant: str = "Q4_K_M", out_file: Path | None = None) -> Path:
     """Converte o modelo fundido para GGUF e quantiza, usando o llama.cpp local."""
     merged_dir = Path(merged_dir)
-    llama_cpp = Path(llama_cpp or Path.home() / "zibetti-lab" / "llama.cpp")
+    llama_cpp = Path(llama_cpp or os.getenv("LLAMA_CPP_DIR") or Path.home() / "llama.cpp")
     conversor = llama_cpp / "convert_hf_to_gguf.py"
     if not conversor.exists():
         raise FileNotFoundError(

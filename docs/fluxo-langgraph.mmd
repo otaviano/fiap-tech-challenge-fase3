@@ -1,0 +1,31 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	triagem(triagem)
+	contexto_paciente(contexto_paciente)
+	exames_pendentes(exames_pendentes)
+	avaliar_alertas(avaliar_alertas)
+	recuperar_protocolo(recuperar_protocolo)
+	redigir_resposta(redigir_resposta)
+	validar_saida(validar_saida)
+	notificar_equipe(notificar_equipe)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> triagem;
+	avaliar_alertas --> recuperar_protocolo;
+	contexto_paciente --> exames_pendentes;
+	exames_pendentes --> avaliar_alertas;
+	recuperar_protocolo --> redigir_resposta;
+	redigir_resposta --> validar_saida;
+	triagem -. &nbsp;com_paciente&nbsp; .-> contexto_paciente;
+	triagem -. &nbsp;sem_paciente&nbsp; .-> recuperar_protocolo;
+	triagem -. &nbsp;bloqueado&nbsp; .-> validar_saida;
+	validar_saida -. &nbsp;fim&nbsp; .-> __end__;
+	validar_saida -. &nbsp;notificar&nbsp; .-> notificar_equipe;
+	notificar_equipe --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
