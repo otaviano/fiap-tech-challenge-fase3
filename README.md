@@ -21,7 +21,7 @@ são sintéticos e autorais.
 
 | Requisito do enunciado | Onde está |
 |---|---|
-| Fine-tuning de LLM com dados médicos internos | [`finetune/train.py`](src/med_assist/finetune/train.py) — LoRA sobre Qwen2.5 |
+| Fine-tuning de LLM com dados médicos internos | [`finetune/train.py`](src/med_assist/finetune/train.py) — LoRA sobre Qwen2.5 ([por que não o 4B da Fase 2](#3-servir-a-llm)) |
 | Protocolos, FAQ de médicos, modelos de laudo/receita/procedimento | [`data/protocol_source.py`](src/med_assist/data/protocol_source.py) + [`data/synth.py`](src/med_assist/data/synth.py) |
 | Preprocessing, anonimização e curadoria | [`data/anonymize.py`](src/med_assist/data/anonymize.py), [`data/curation.py`](src/med_assist/data/curation.py) |
 | Pipeline LangChain integrando a LLM customizada | [`assistant/chain.py`](src/med_assist/assistant/chain.py), [`assistant/llm.py`](src/med_assist/assistant/llm.py) |
@@ -103,6 +103,18 @@ med-assist ehr seed            # popula o prontuário eletrônico (SQLite)
 
 O assistente fala com qualquer endpoint OpenAI-compatível (llama.cpp, Ollama,
 LM Studio, vLLM). Com o modelo desta fase:
+
+> **Por que o modelo mudou entre a Fase 2 e a Fase 3.** A Fase 2 servia um
+> **Qwen3 4B Instruct em GGUF Q4_K_M**, e a intenção era treinar exatamente ele.
+> Não dá, por duas razões: (1) GGUF quantizado é formato de **inferência** — não
+> há gradiente em pesos de 4 bits; (2) a máquina de desenvolvimento não tem GPU
+> CUDA, e LoRA num modelo de 4B em 8 núcleos de CPU levaria muitas horas por
+> época. A saída preserva a continuidade onde ela é real: treinamos um **Qwen
+> menor da mesma família** (mesmo tokenizer, mesmo chat template) e servimos o
+> resultado **no mesmo `llama-server`**. O que muda entre as fases é o modelo
+> servido, não a infraestrutura de inferência. Detalhes e alternativas
+> descartadas em [`docs/fine-tuning.md`](docs/fine-tuning.md) e na
+> [seção 4.1 do relatório](RELATORIO_TECH_CHALLENGE_FASE3.md).
 
 ```bash
 llama-server -m models/med-assist-f16.gguf --alias med-assist --port 8080

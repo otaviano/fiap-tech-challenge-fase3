@@ -1,5 +1,12 @@
 """Fine-tuning LoRA da LLM com os dados internos do hospital.
 
+Por que este modelo base e não o Qwen3 4B da Fase 2: o que a Fase 2 serve é um
+GGUF quantizado em 4 bits, que é formato de inferência — não há gradiente ali —
+e a máquina de desenvolvimento não tem GPU CUDA, o que tornaria LoRA num 4B uma
+questão de horas por época. Treinamos então um Qwen menor da mesma família,
+com o mesmo tokenizer e o mesmo chat template, e servimos o resultado no mesmo
+`llama-server`: muda o modelo servido, não a infraestrutura.
+
 Por que LoRA e não fine-tuning completo: o objetivo é ensinar **formato, registro
 e limites** — citar protocolo, recusar ato médico, responder no padrão do
 hospital — não injetar conhecimento novo (esse vem por recuperação, em tempo de
