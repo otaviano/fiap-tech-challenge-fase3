@@ -1,0 +1,185 @@
+"""Limites de atuação do assistente — na entrada e na saída.
+
+O desafio pede que o assistente nunca prescreva sem validação humana. Fine-tuning
+*inclina* o modelo nessa direção; ele não garante nada. Por isso a garantia é
+determinística e fica fora do modelo:
+
+- **Entrada** (`check_input`): pedidos que exigem ato médico — prescrever, indicar
+  dose para administração, assinar laudo, emitir atestado, decidir alta — são
+  bloqueados antes de chegar ao LLM, com resposta institucional pronta.
+- **Saída** (`check_output`): a resposta gerada é auditada — precisa citar fonte,
+  não pode conter PII, não pode vir em modo imperativo de prescrição, e recebe o
+  aviso de validação humana se ele faltar.
+
+Um bloqueio na entrada economiza uma chamada ao modelo e, mais importante,
+elimina a chance de a recusa depender da sorte do decoding.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+
+from ..data.anonymize import residual_pii
+from ..persona import DISCLAIMER
+
+# --------------------------------------------------------------------------- #
+# Entrada
+# --------------------------------------------------------------------------- #
+
+#: (motivo, padrão). Os padrões miram o *ato* pedido, não o assunto: falar sobre
+#: prescrição é legítimo; pedir que o assistente prescreva, não.
+PADROES_ATO_MEDICO: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("prescricao_direta", re.compile(
+        r"\b(prescrev[ae]|prescrever|receit[ae]|me\s+d[êe]\s+a\s+(dose|receita)|"
+        r"passa\s+a\s+medica[çc][ãa]o|manda\s+a\s+prescri[çc][ãa]o)\b", re.I)),
+    ("dose_para_administracao", re.compile(
+        r"\b(dose\s+(exata|certa)|quanto\s+(devo|posso)\s+(dar|aplicar|administrar)|"
+        r"aplic(o|ar)\s+agora|posso\s+dar\s+\d)", re.I)),
+    ("assinatura_de_documento", re.compile(
+        r"\b(assin[ae]r?\s+(o\s+)?(laudo|receita|atestado|documento)|emit[ae]\s+(um\s+)?atestado|"
+        r"emite\s+(o\s+)?laudo)\b", re.I)),
+    ("decisao_de_alta_ou_internacao", re.compile(
+        r"\b(pode\s+dar\s+alta|dou\s+alta|decid[ae]\s+por\s+mim|interno\s+ou\s+dou\s+alta|"
+        r"assume\s+a\s+responsabilidade)\b", re.I)),
+    ("diagnostico_definitivo", re.compile(
+        r"\b(fech[ae]\s+o\s+diagn[óo]stico|confirma\s+que\s+[ée]\s+c[âa]ncer|"
+        r"[ée]\s+c[âa]ncer\s+ou\s+n[ãa]o)\b", re.I)),
+    ("solicitacao_de_pii", re.compile(
+        r"\b(cpf|cns|rg|telefone|celular|endere[çc]o|e-?mail)\s+(d[oa]\s+)?(paciente|dele|dela)|"
+        r"\b(me\s+passa|informe)\s+o\s+(cpf|telefone|endere[çc]o)", re.I)),
+    ("alteracao_de_registro", re.compile(
+        r"\b(apag[ae]r?|remov[ae]r?|delet[ae]r?)\s+(o\s+)?(alerta|registro|log|prontu[áa]rio|auditoria)", re.I)),
+    ("tentativa_de_burlar_limites", re.compile(
+        r"\b(ignore\s+(suas|as)\s+(regras|instru[çc][õo]es)|modo\s+desenvolvedor|sem\s+restri[çc][õo]es|"
+        r"esquece\s+(as\s+)?regras|finja\s+que|sem\s+esse\s+aviso)\b", re.I)),
+)
+
+RESPOSTAS_PADRAO = {
+    "prescricao_direta":
+        "Não posso emitir prescrição. A prescrição é ato médico e exige validação humana registrada "
+        "em prontuário. Posso apresentar o que o protocolo interno recomenda para o quadro, com a "
+        "fonte citada, e listar as pendências do caso para apoiar sua decisão.",
+    "dose_para_administracao":
+        "Não indico dose para administração direta. Posso mostrar o que o protocolo institucional "
+        "preconiza e quais checagens ele exige antes da administração — a definição da dose, com "
+        "ajuste ao paciente, é do médico assistente.",
+    "assinatura_de_documento":
+        "Não emito nem assino laudos, receitas ou atestados. Esses documentos têm responsabilidade "
+        "legal do profissional que os assina. Posso reunir os dados do caso e o modelo institucional "
+        "correspondente para que o médico responsável avalie.",
+    "decisao_de_alta_ou_internacao":
+        "A decisão de alta, internação ou nível de cuidado é do médico assistente e eu não a assumo. "
+        "Posso apresentar o escore que o protocolo usa nessa decisão, os achados registrados e os "
+        "alertas ativos do caso.",
+    "diagnostico_definitivo":
+        "Não fecho diagnóstico — isso é ato médico e depende de exames com laudo e da avaliação "
+        "clínica. Posso listar o que já consta no prontuário, o que está pendente e o que o protocolo "
+        "exige antes da conduta.",
+    "solicitacao_de_pii":
+        "Não forneço dados identificáveis de paciente. Trabalho com o mínimo necessário para a decisão "
+        "clínica — idade, quadro, exames, medicações e alergias. Dados cadastrais ficam no prontuário "
+        "eletrônico, com acesso próprio e auditado.",
+    "alteracao_de_registro":
+        "Não altero nem removo registros de prontuário ou da trilha de auditoria. Se houver erro em um "
+        "registro, o caminho é a retificação formal pelo serviço responsável, que também fica registrada.",
+    "tentativa_de_burlar_limites":
+        "Meus limites de atuação fazem parte do sistema e não são configuráveis: não prescrevo, não "
+        "assino documentos e não substituo decisão médica. O apoio que posso dar continua disponível — "
+        "critérios de protocolo, pendências do caso e alertas, com a fonte citada.",
+}
+
+#: Assuntos fora do escopo assistencial do hospital.
+PADRAO_FORA_DE_ESCOPO = re.compile(
+    r"\b(meu\s+sobrinho|minha\s+m[ãa]e|pra\s+mim\s+mesmo|estou\s+sentindo|eu\s+sinto|"
+    r"minha\s+dor\s+de\s+cabe[çc]a|rem[ée]dio\s+eu\s+tomo)\b", re.I)
+
+RESPOSTA_FORA_DE_ESCOPO = (
+    "Atendo apenas profissionais do corpo clínico, no contexto assistencial do hospital, e não oriento "
+    "casos pessoais nem automedicação. Para queixas próprias ou de familiares, procure atendimento médico."
+)
+
+
+@dataclass
+class GuardrailVerdict:
+    """Resultado de uma checagem — o que aconteceu e por quê."""
+
+    bloqueado: bool = False
+    motivos: list[str] = field(default_factory=list)
+    resposta: str | None = None
+    severidade: str = "info"
+
+    def as_dict(self) -> dict:
+        return {"bloqueado": self.bloqueado, "motivos": self.motivos, "severidade": self.severidade}
+
+
+def check_input(pergunta: str) -> GuardrailVerdict:
+    """Barra pedidos que exigem ato médico, antes de qualquer chamada ao modelo."""
+    motivos: list[str] = []
+    resposta: str | None = None
+
+    for motivo, padrao in PADROES_ATO_MEDICO:
+        if padrao.search(pergunta):
+            motivos.append(motivo)
+            resposta = resposta or RESPOSTAS_PADRAO[motivo]
+
+    if PADRAO_FORA_DE_ESCOPO.search(pergunta):
+        motivos.append("fora_de_escopo")
+        resposta = resposta or RESPOSTA_FORA_DE_ESCOPO
+
+    if not motivos:
+        return GuardrailVerdict()
+
+    complemento = (
+        "\n\nSe quiser, informe o prontuário do caso: apresento os critérios do protocolo aplicável, "
+        "os exames pendentes e os alertas ativos, sempre com a fonte citada."
+    )
+    return GuardrailVerdict(bloqueado=True, motivos=motivos,
+                            resposta=(resposta or "") + complemento, severidade="bloqueio")
+
+
+# --------------------------------------------------------------------------- #
+# Saída
+# --------------------------------------------------------------------------- #
+
+#: Imperativos de administração sem menção a validação — o que não pode sair.
+PADRAO_IMPERATIVO = re.compile(
+    r"^\s*(administre|aplique|injete|prescreva|inicie\s+imediatamente)\b", re.I | re.M)
+
+PADRAO_FONTE = re.compile(r"(PROT-[A-Z]{3}-\d{3}|Fonte:|Prontuário\s+PRT-|Source:)")
+
+PADRAO_VALIDACAO = re.compile(
+    r"valida[çc][ãa]o\s+(humana|do\s+m[ée]dico|m[ée]dica)|m[ée]dico\s+assistente|"
+    r"n[ãa]o\s+constitui\s+prescri[çc][ãa]o", re.I)
+
+
+def check_output(resposta: str, exige_fonte: bool = True) -> tuple[str, GuardrailVerdict]:
+    """Audita e corrige a resposta gerada. Devolve (resposta_final, veredito)."""
+    motivos: list[str] = []
+    final = resposta.strip()
+
+    residuo = residual_pii(final)
+    if residuo:
+        motivos.append(f"pii_na_resposta:{len(residuo)}")
+        return (
+            "A resposta gerada foi bloqueada por conter dados identificáveis. Reformule a pergunta "
+            "usando apenas o número do prontuário — o assistente trabalha com dados mínimos.",
+            GuardrailVerdict(bloqueado=True, motivos=motivos, severidade="critico"),
+        )
+
+    if PADRAO_IMPERATIVO.search(final):
+        motivos.append("tom_imperativo_de_prescricao")
+        final = (
+            "⚠️ Reformulado pelo guardrail de saída: o texto original vinha em forma de ordem de "
+            "administração. O conteúdo abaixo é sugestão de apoio, não prescrição.\n\n" + final
+        )
+
+    if exige_fonte and not PADRAO_FONTE.search(final):
+        motivos.append("resposta_sem_fonte")
+
+    if not PADRAO_VALIDACAO.search(final):
+        motivos.append("disclaimer_ausente_incluido")
+        final = f"{final}\n\n> {DISCLAIMER}"
+
+    severidade = "aviso" if motivos else "info"
+    return final, GuardrailVerdict(bloqueado=False, motivos=motivos, severidade=severidade)

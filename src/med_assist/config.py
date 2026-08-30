@@ -42,7 +42,7 @@ class LLMSettings:
     model: str = os.getenv("LLM_MODEL", "med-assist")
     api_key: str = os.getenv("LLM_API_KEY", "sk-no-key-required")
     temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
-    max_tokens: int = int(os.getenv("LLM_MAX_TOKENS", "700"))
+    max_tokens: int = int(os.getenv("LLM_MAX_TOKENS", "1000"))
     timeout: float = float(os.getenv("LLM_TIMEOUT", "120"))
 
 
