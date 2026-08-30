@@ -1,0 +1,16 @@
+{
+  "exemplos_de_entrada": 389,
+  "exemplos_aprovados": 386,
+  "descartados": 3,
+  "motivos_de_descarte": {
+    "duplicata_exata": 3
+  },
+  "aprovados_por_categoria": {
+    "conhecimento_geral": 195,
+    "documento": 24,
+    "faq": 20,
+    "faq_contextualizada": 12,
+    "limite_de_atuacao": 15,
+    "protocolo_qa": 120
+  }
+}

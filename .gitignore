@@ -1,0 +1,54 @@
+# Materiais do curso (não são entregáveis)
+*Tech challenge*.pdf
+Capítulo de Projeto*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dados externos baixados (MedQuAD é clonado por scripts/fetch_medquad.sh)
+data/external/
+
+# Artefatos de treino (pesados) — o pipeline que os gera É versionado
+models/
+outputs/
+*.gguf
+*.safetensors
+*.bin
+
+# Resultados: métricas e logs de evidência SÃO versionados; o resto não
+results/**/*.png
+results/logs/*.log
+!results/logs/exemplo_execucao.log
+!results/logs/exemplo_auditoria.jsonl
+
+# Banco de prontuários é gerado pelo seed (determinístico)
+data/structured/*.db
+
+# Segredos
+.env
+.env.*
+*.key
+*.pem
+*secret*.json
+*credential*.json
+
+# SO / editores
+.DS_Store
+.idea/
+.vscode/

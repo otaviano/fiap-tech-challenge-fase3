@@ -1,0 +1,8 @@
+# Stack de fine-tuning (LoRA). Instale só na máquina/notebook que treina.
+# CPU:  pip install torch --index-url https://download.pytorch.org/whl/cpu
+# CUDA: pip install torch  (wheel padrão do PyPI já traz CUDA)
+torch>=2.2
+transformers>=4.44
+peft>=0.12
+datasets>=2.20
+accelerate>=0.33

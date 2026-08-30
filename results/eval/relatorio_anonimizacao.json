@@ -1,0 +1,16 @@
+{
+  "documentos_processados": 390,
+  "identificadores_removidos": 260,
+  "por_tipo": {
+    "NOME": 80,
+    "PRONTUARIO": 48,
+    "CRM": 44,
+    "TELEFONE": 28,
+    "CPF": 20,
+    "DATA": 8,
+    "CNS": 8,
+    "CEP": 8,
+    "ENDERECO": 8,
+    "EMAIL": 8
+  }
+}

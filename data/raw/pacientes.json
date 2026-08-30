@@ -1,0 +1,1971 @@
+[
+  {
+    "paciente_id": "PRT-2026-100000",
+    "nome": "Isabela Pereira Silva",
+    "cpf": "013.389.083-93",
+    "cns": "863 7940 2654 2351",
+    "rg": "15.489.199-5",
+    "nascimento": "28/06/1945",
+    "idade": 81,
+    "sexo": "F",
+    "telefone": "(11) 95333-1711",
+    "email": "isabela.pereira@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 1118",
+    "cep": "03045-487",
+    "convenio": "SUS",
+    "setor": "Ambulatório de Mastologia",
+    "leito": "A-36",
+    "admissao": "19/08/2026",
+    "queixa": "nódulo mamário palpável há 2 meses",
+    "condicao": "Nódulo mamário BI-RADS 4 em quadrante superior externo à direita",
+    "protocolo": "PROT-ONC-001",
+    "alergias": [
+      "látex",
+      "penicilina"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "hipertensão arterial",
+      "doença renal crônica estágio 3"
+    ],
+    "sinais_vitais": {
+      "PA": "128/82 mmHg",
+      "FC": 78,
+      "FR": 16,
+      "Temp": 36.4,
+      "SpO2": 98
+    },
+    "escores": {
+      "BI-RADS": 4
+    },
+    "exames": [
+      {
+        "exame": "Imuno-histoquímica (RE, RP, HER2, Ki-67)",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Hemograma completo, função hepática e renal",
+        "status": "concluído",
+        "solicitado_em": "27/08/2026",
+        "resultado": "Hb 11,8 g/dL; leucócitos 14.200/mm³; creatinina 1,1 mg/dL"
+      },
+      {
+        "exame": "Mamografia digital bilateral (até 12 meses)",
+        "status": "concluído",
+        "solicitado_em": "12/08/2026",
+        "resultado": "Nódulo espiculado de 1,8 cm, BI-RADS 4"
+      },
+      {
+        "exame": "Ultrassonografia mamária e axilar",
+        "status": "pendente",
+        "solicitado_em": "23/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Core biopsy com laudo anatomopatológico",
+        "status": "pendente",
+        "solicitado_em": "11/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "dipirona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "se dor",
+        "prescrito_por": "Dra. Helena Vasconcelos Prado"
+      }
+    ],
+    "medico_assistente": "Dra. Helena Vasconcelos Prado",
+    "crm_assistente": "CRM-SP 142.887"
+  },
+  {
+    "paciente_id": "PRT-2026-100137",
+    "nome": "Mariana Machado Oliveira",
+    "cpf": "419.283.276-44",
+    "cns": "835 0305 6413 9537",
+    "rg": "35.758.569-2",
+    "nascimento": "09/03/1938",
+    "idade": 88,
+    "sexo": "F",
+    "telefone": "(11) 95040-9830",
+    "email": "mariana.machado@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 1549",
+    "cep": "08019-697",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-24",
+    "admissao": "18/08/2026",
+    "queixa": "febre, dispneia e confusão mental há 12 horas",
+    "condicao": "Sepse de foco pulmonar",
+    "protocolo": "PROT-EME-002",
+    "alergias": [
+      "látex"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "hipertensão arterial"
+    ],
+    "sinais_vitais": {
+      "PA": "92/54 mmHg",
+      "FC": 118,
+      "FR": 26,
+      "Temp": 38.9,
+      "SpO2": 91
+    },
+    "escores": {
+      "qSOFA": 2,
+      "lactato": 3.8
+    },
+    "exames": [
+      {
+        "exame": "Gasometria arterial",
+        "status": "concluído",
+        "solicitado_em": "21/08/2026",
+        "resultado": "pH 7,31; pCO2 32 mmHg; HCO3 17 mEq/L"
+      },
+      {
+        "exame": "Hemograma, PCR, creatinina, bilirrubinas",
+        "status": "concluído",
+        "solicitado_em": "15/08/2026",
+        "resultado": "Leucócitos 18.400/mm³; PCR 214 mg/L; creatinina 1,6 mg/dL"
+      },
+      {
+        "exame": "Cultura do foco suspeito (urina, secreção, líquor)",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Duas hemoculturas (pré-antibiótico)",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Lactato arterial seriado",
+        "status": "pendente",
+        "solicitado_em": "16/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "piperacilina-tazobactam",
+        "dose": "4,5 g",
+        "via": "EV",
+        "frequencia": "6/6h",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      },
+      {
+        "medicamento": "noradrenalina",
+        "dose": "0,1 mcg/kg/min",
+        "via": "EV",
+        "frequencia": "contínuo",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      }
+    ],
+    "medico_assistente": "Dr. Ricardo Menezes Tavares",
+    "crm_assistente": "CRM-SP 98.442"
+  },
+  {
+    "paciente_id": "PRT-2026-100274",
+    "nome": "Juliana Nogueira Fonseca",
+    "cpf": "184.514.627-10",
+    "cns": "482 8148 9325 2880",
+    "rg": "48.431.600-0",
+    "nascimento": "04/06/1954",
+    "idade": 72,
+    "sexo": "F",
+    "telefone": "(11) 96038-4923",
+    "email": "juliana.nogueira@exemplo.com.br",
+    "endereco": "Rua das Acácias, nº 513",
+    "cep": "02290-187",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-05",
+    "admissao": "27/08/2026",
+    "queixa": "dor retroesternal em aperto há 40 minutos, com irradiação para o braço esquerdo",
+    "condicao": "Dor torácica típica em investigação para síndrome coronariana aguda",
+    "protocolo": "PROT-CAR-003",
+    "alergias": [
+      "penicilina"
+    ],
+    "comorbidades": [
+      "asma",
+      "dislipidemia",
+      "nenhuma"
+    ],
+    "sinais_vitais": {
+      "PA": "148/92 mmHg",
+      "FC": 96,
+      "FR": 20,
+      "Temp": 36.6,
+      "SpO2": 96
+    },
+    "escores": {
+      "HEART": 5
+    },
+    "exames": [
+      {
+        "exame": "Eletrólitos, função renal e coagulograma",
+        "status": "concluído",
+        "solicitado_em": "26/08/2026",
+        "resultado": "Na 138; K 4,1; INR 1,0"
+      },
+      {
+        "exame": "Radiografia de tórax",
+        "status": "concluído",
+        "solicitado_em": "18/08/2026",
+        "resultado": "Índice cardiotorácico normal, sem congestão"
+      },
+      {
+        "exame": "Troponina ultrassensível (0h e 3h)",
+        "status": "pendente",
+        "solicitado_em": "27/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "ECG de 12 derivações seriado",
+        "status": "pendente",
+        "solicitado_em": "10/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "AAS",
+        "dose": "100 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      },
+      {
+        "medicamento": "atorvastatina",
+        "dose": "80 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      }
+    ],
+    "medico_assistente": "Dra. Cláudia Ferreira Bittencourt",
+    "crm_assistente": "CRM-SP 110.365"
+  },
+  {
+    "paciente_id": "PRT-2026-100411",
+    "nome": "Bruno Dantas Barbosa",
+    "cpf": "150.983.930-19",
+    "cns": "031 0518 3473 8299",
+    "rg": "40.348.903-7",
+    "nascimento": "26/07/1947",
+    "idade": 79,
+    "sexo": "M",
+    "telefone": "(11) 94119-2545",
+    "email": "bruno.dantas@exemplo.com.br",
+    "endereco": "Avenida Brigadeiro Faria, nº 1369",
+    "cep": "08062-462",
+    "convenio": "Particular",
+    "setor": "Unidade de Terapia Intensiva",
+    "leito": "U-27",
+    "admissao": "22/08/2026",
+    "queixa": "vômitos, poliúria e sonolência há 2 dias",
+    "condicao": "Cetoacidose diabética",
+    "protocolo": "PROT-END-004",
+    "alergias": [
+      "nenhuma conhecida"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "hipertensão arterial",
+      "obesidade grau I"
+    ],
+    "sinais_vitais": {
+      "PA": "104/62 mmHg",
+      "FC": 112,
+      "FR": 28,
+      "Temp": 36.8,
+      "SpO2": 97
+    },
+    "escores": {
+      "glicemia": 412,
+      "pH": 7.18,
+      "K": 3.1
+    },
+    "exames": [
+      {
+        "exame": "Gasometria arterial ou venosa",
+        "status": "concluído",
+        "solicitado_em": "26/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Glicemia capilar horária",
+        "status": "concluído",
+        "solicitado_em": "24/08/2026",
+        "resultado": "412 mg/dL na admissão"
+      },
+      {
+        "exame": "Função renal e hemograma",
+        "status": "pendente",
+        "solicitado_em": "13/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Cetonemia ou cetonúria",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Eletrólitos (Na, K, Cl) a cada 4 horas",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "insulina regular",
+        "dose": "0,1 U/kg/h",
+        "via": "EV",
+        "frequencia": "bomba de infusão",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      },
+      {
+        "medicamento": "cloreto de potássio",
+        "dose": "20 mEq",
+        "via": "EV",
+        "frequencia": "conforme controle",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      }
+    ],
+    "medico_assistente": "Dr. Paulo Sérgio Andrade Lima",
+    "crm_assistente": "CRM-SP 87.209"
+  },
+  {
+    "paciente_id": "PRT-2026-100548",
+    "nome": "Antônio Pereira Rocha",
+    "cpf": "810.801.326-72",
+    "cns": "736 0260 6474 6872",
+    "rg": "22.403.322-0",
+    "nascimento": "19/12/1980",
+    "idade": 46,
+    "sexo": "M",
+    "telefone": "(11) 99883-1998",
+    "email": "antônio.pereira@exemplo.com.br",
+    "endereco": "Rua Domingos Ferreira, nº 137",
+    "cep": "01821-698",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-33",
+    "admissao": "28/08/2026",
+    "queixa": "hemiparesia à direita e disartria com início há 1h40",
+    "condicao": "AVC isquêmico agudo em janela terapêutica",
+    "protocolo": "PROT-NEU-005",
+    "alergias": [
+      "dipirona"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "dislipidemia",
+      "hipertensão arterial"
+    ],
+    "sinais_vitais": {
+      "PA": "176/98 mmHg",
+      "FC": 84,
+      "FR": 18,
+      "Temp": 36.5,
+      "SpO2": 97
+    },
+    "escores": {
+      "NIHSS": 8,
+      "tempo_sintomas_h": 1.7
+    },
+    "exames": [
+      {
+        "exame": "Coagulograma e plaquetas",
+        "status": "concluído",
+        "solicitado_em": "18/08/2026",
+        "resultado": "INR 1,0; plaquetas 233.000/mm³"
+      },
+      {
+        "exame": "Angiotomografia de crânio e vasos cervicais quando indicada trombectomia",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Tomografia de crânio sem contraste",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "ECG e troponina",
+        "status": "pendente",
+        "solicitado_em": "12/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Glicemia capilar imediata",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enalapril",
+        "dose": "5 mg",
+        "via": "VO",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dra. Marina Okamoto Ribeiro"
+      }
+    ],
+    "medico_assistente": "Dra. Marina Okamoto Ribeiro",
+    "crm_assistente": "CRM-SP 123.774"
+  },
+  {
+    "paciente_id": "PRT-2026-100685",
+    "nome": "Isabela Rocha Batista",
+    "cpf": "353.462.475-19",
+    "cns": "079 9118 3842 5135",
+    "rg": "28.261.548-8",
+    "nascimento": "23/05/1985",
+    "idade": 41,
+    "sexo": "F",
+    "telefone": "(11) 99666-1128",
+    "email": "isabela.rocha@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 1378",
+    "cep": "02697-999",
+    "convenio": "Convênio Vida+",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-17",
+    "admissao": "16/08/2026",
+    "queixa": "tosse produtiva, febre e dor pleurítica há 4 dias",
+    "condicao": "Pneumonia adquirida na comunidade",
+    "protocolo": "PROT-PNE-006",
+    "alergias": [
+      "nenhuma conhecida"
+    ],
+    "comorbidades": [
+      "dislipidemia",
+      "tabagismo (20 maços-ano)",
+      "nenhuma"
+    ],
+    "sinais_vitais": {
+      "PA": "118/70 mmHg",
+      "FC": 98,
+      "FR": 24,
+      "Temp": 38.4,
+      "SpO2": 92
+    },
+    "escores": {
+      "CURB-65": 2
+    },
+    "exames": [
+      {
+        "exame": "Hemocultura e cultura de escarro nos internados",
+        "status": "concluído",
+        "solicitado_em": "23/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Radiografia de tórax PA e perfil",
+        "status": "pendente",
+        "solicitado_em": "26/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Saturação de oxigênio ou gasometria",
+        "status": "pendente",
+        "solicitado_em": "20/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Hemograma, ureia e creatinina",
+        "status": "pendente",
+        "solicitado_em": "18/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "ceftriaxona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      },
+      {
+        "medicamento": "azitromicina",
+        "dose": "500 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      }
+    ],
+    "medico_assistente": "Dr. Anderson Luiz Carvalho",
+    "crm_assistente": "CRM-SP 76.518"
+  },
+  {
+    "paciente_id": "PRT-2026-100822",
+    "nome": "Luciana Teixeira Barbosa",
+    "cpf": "005.242.786-81",
+    "cns": "011 2805 9826 2045",
+    "rg": "12.466.315-3",
+    "nascimento": "22/02/1949",
+    "idade": 77,
+    "sexo": "F",
+    "telefone": "(11) 96794-7658",
+    "email": "luciana.teixeira@exemplo.com.br",
+    "endereco": "Rua Coronel Bento, nº 504",
+    "cep": "03662-919",
+    "convenio": "Convênio Vida+",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-27",
+    "admissao": "15/08/2026",
+    "queixa": "edema e dor em panturrilha esquerda há 3 dias",
+    "condicao": "Suspeita de trombose venosa profunda em membro inferior esquerdo",
+    "protocolo": "PROT-HEM-007",
+    "alergias": [
+      "nenhuma conhecida"
+    ],
+    "comorbidades": [
+      "insuficiência cardíaca",
+      "obesidade grau I"
+    ],
+    "sinais_vitais": {
+      "PA": "132/84 mmHg",
+      "FC": 88,
+      "FR": 18,
+      "Temp": 37.1,
+      "SpO2": 96
+    },
+    "escores": {
+      "Wells": 3,
+      "Padua": 5
+    },
+    "exames": [
+      {
+        "exame": "D-dímero quando probabilidade pré-teste baixa ou intermediária",
+        "status": "concluído",
+        "solicitado_em": "11/08/2026",
+        "resultado": "1.840 ng/mL"
+      },
+      {
+        "exame": "Ultrassom Doppler de membros inferiores",
+        "status": "concluído",
+        "solicitado_em": "12/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Hemograma, creatinina e coagulograma",
+        "status": "pendente",
+        "solicitado_em": "23/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Angiotomografia de tórax na suspeita de embolia pulmonar",
+        "status": "pendente",
+        "solicitado_em": "18/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enoxaparina",
+        "dose": "40 mg",
+        "via": "SC",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Beatriz Nogueira Salles"
+      }
+    ],
+    "medico_assistente": "Dra. Beatriz Nogueira Salles",
+    "crm_assistente": "CRM-SP 134.902"
+  },
+  {
+    "paciente_id": "PRT-2026-100959",
+    "nome": "Marcos Pereira Batista",
+    "cpf": "330.365.414-54",
+    "cns": "868 5014 2940 1965",
+    "rg": "30.546.720-8",
+    "nascimento": "04/07/1990",
+    "idade": 36,
+    "sexo": "M",
+    "telefone": "(11) 94114-5173",
+    "email": "marcos.pereira@exemplo.com.br",
+    "endereco": "Rua das Acácias, nº 1471",
+    "cep": "08144-101",
+    "convenio": "Convênio Vida+",
+    "setor": "Enfermaria Cirúrgica",
+    "leito": "E-24",
+    "admissao": "21/08/2026",
+    "queixa": "secreção purulenta em ferida operatória e febre no 5º dia pós-operatório",
+    "condicao": "Infecção de sítio cirúrgico em uso de antimicrobiano restrito",
+    "protocolo": "PROT-INF-008",
+    "alergias": [
+      "nenhuma conhecida"
+    ],
+    "comorbidades": [
+      "doença renal crônica estágio 3",
+      "diabetes mellitus tipo 2"
+    ],
+    "sinais_vitais": {
+      "PA": "126/78 mmHg",
+      "FC": 92,
+      "FR": 18,
+      "Temp": 38.2,
+      "SpO2": 95
+    },
+    "escores": {
+      "dias_antibiotico": 8
+    },
+    "exames": [
+      {
+        "exame": "Função renal para ajuste de dose",
+        "status": "concluído",
+        "solicitado_em": "24/08/2026",
+        "resultado": "Creatinina 0,9 mg/dL; ClCr 88 mL/min"
+      },
+      {
+        "exame": "Culturas do sítio suspeito antes do início da terapia",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Hemograma e PCR seriados",
+        "status": "pendente",
+        "solicitado_em": "19/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "meropenem",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "8/8h",
+        "prescrito_por": "Dr. Fernando Kazuo Watanabe"
+      }
+    ],
+    "medico_assistente": "Dr. Fernando Kazuo Watanabe",
+    "crm_assistente": "CRM-SP 65.130"
+  },
+  {
+    "paciente_id": "PRT-2026-101096",
+    "nome": "Luciana Machado Camargo",
+    "cpf": "994.680.443-65",
+    "cns": "995 7773 8721 4895",
+    "rg": "15.938.869-3",
+    "nascimento": "22/05/1973",
+    "idade": 53,
+    "sexo": "F",
+    "telefone": "(11) 94680-4262",
+    "email": "luciana.machado@exemplo.com.br",
+    "endereco": "Rua Coronel Bento, nº 70",
+    "cep": "01757-350",
+    "convenio": "Particular",
+    "setor": "Ambulatório de Mastologia",
+    "leito": "A-40",
+    "admissao": "28/08/2026",
+    "queixa": "nódulo mamário palpável há 2 meses",
+    "condicao": "Nódulo mamário BI-RADS 4 em quadrante superior externo à direita",
+    "protocolo": "PROT-ONC-001",
+    "alergias": [
+      "iodo"
+    ],
+    "comorbidades": [
+      "obesidade grau I",
+      "insuficiência cardíaca"
+    ],
+    "sinais_vitais": {
+      "PA": "128/82 mmHg",
+      "FC": 78,
+      "FR": 16,
+      "Temp": 36.4,
+      "SpO2": 98
+    },
+    "escores": {
+      "BI-RADS": 4
+    },
+    "exames": [
+      {
+        "exame": "Mamografia digital bilateral (até 12 meses)",
+        "status": "concluído",
+        "solicitado_em": "14/08/2026",
+        "resultado": "Nódulo espiculado de 1,8 cm, BI-RADS 4"
+      },
+      {
+        "exame": "Hemograma completo, função hepática e renal",
+        "status": "concluído",
+        "solicitado_em": "16/08/2026",
+        "resultado": "Hb 11,8 g/dL; leucócitos 14.200/mm³; creatinina 1,1 mg/dL"
+      },
+      {
+        "exame": "Ultrassonografia mamária e axilar",
+        "status": "concluído",
+        "solicitado_em": "23/08/2026",
+        "resultado": "Nódulo sólido hipoecogênico de 1,7 cm; axila sem linfonodomegalia"
+      },
+      {
+        "exame": "Core biopsy com laudo anatomopatológico",
+        "status": "pendente",
+        "solicitado_em": "22/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Imuno-histoquímica (RE, RP, HER2, Ki-67)",
+        "status": "pendente",
+        "solicitado_em": "15/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "dipirona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "se dor",
+        "prescrito_por": "Dra. Helena Vasconcelos Prado"
+      }
+    ],
+    "medico_assistente": "Dra. Helena Vasconcelos Prado",
+    "crm_assistente": "CRM-SP 142.887"
+  },
+  {
+    "paciente_id": "PRT-2026-101233",
+    "nome": "Thiago Rocha Almeida",
+    "cpf": "172.788.957-88",
+    "cns": "868 7277 4348 7347",
+    "rg": "14.830.392-3",
+    "nascimento": "09/06/1951",
+    "idade": 75,
+    "sexo": "M",
+    "telefone": "(11) 96238-9849",
+    "email": "thiago.rocha@exemplo.com.br",
+    "endereco": "Avenida Brigadeiro Faria, nº 303",
+    "cep": "03471-336",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-10",
+    "admissao": "26/08/2026",
+    "queixa": "febre, dispneia e confusão mental há 12 horas",
+    "condicao": "Sepse de foco pulmonar",
+    "protocolo": "PROT-EME-002",
+    "alergias": [
+      "dipirona"
+    ],
+    "comorbidades": [
+      "insuficiência cardíaca",
+      "doença renal crônica estágio 3"
+    ],
+    "sinais_vitais": {
+      "PA": "92/54 mmHg",
+      "FC": 118,
+      "FR": 26,
+      "Temp": 38.9,
+      "SpO2": 91
+    },
+    "escores": {
+      "qSOFA": 2,
+      "lactato": 3.8
+    },
+    "exames": [
+      {
+        "exame": "Hemograma, PCR, creatinina, bilirrubinas",
+        "status": "concluído",
+        "solicitado_em": "26/08/2026",
+        "resultado": "Leucócitos 18.400/mm³; PCR 214 mg/L; creatinina 1,6 mg/dL"
+      },
+      {
+        "exame": "Gasometria arterial",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Lactato arterial seriado",
+        "status": "pendente",
+        "solicitado_em": "11/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Cultura do foco suspeito (urina, secreção, líquor)",
+        "status": "pendente",
+        "solicitado_em": "27/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Duas hemoculturas (pré-antibiótico)",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "piperacilina-tazobactam",
+        "dose": "4,5 g",
+        "via": "EV",
+        "frequencia": "6/6h",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      },
+      {
+        "medicamento": "noradrenalina",
+        "dose": "0,1 mcg/kg/min",
+        "via": "EV",
+        "frequencia": "contínuo",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      }
+    ],
+    "medico_assistente": "Dr. Ricardo Menezes Tavares",
+    "crm_assistente": "CRM-SP 98.442"
+  },
+  {
+    "paciente_id": "PRT-2026-101370",
+    "nome": "Thiago Souza Barbosa",
+    "cpf": "668.893.734-65",
+    "cns": "706 5627 2980 6990",
+    "rg": "15.758.538-2",
+    "nascimento": "28/08/1939",
+    "idade": 87,
+    "sexo": "M",
+    "telefone": "(11) 93977-1823",
+    "email": "thiago.souza@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 796",
+    "cep": "06363-316",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-21",
+    "admissao": "20/08/2026",
+    "queixa": "dor retroesternal em aperto há 40 minutos, com irradiação para o braço esquerdo",
+    "condicao": "Dor torácica típica em investigação para síndrome coronariana aguda",
+    "protocolo": "PROT-CAR-003",
+    "alergias": [
+      "sulfa",
+      "iodo"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "asma"
+    ],
+    "sinais_vitais": {
+      "PA": "148/92 mmHg",
+      "FC": 96,
+      "FR": 20,
+      "Temp": 36.6,
+      "SpO2": 96
+    },
+    "escores": {
+      "HEART": 5
+    },
+    "exames": [
+      {
+        "exame": "Radiografia de tórax",
+        "status": "concluído",
+        "solicitado_em": "25/08/2026",
+        "resultado": "Índice cardiotorácico normal, sem congestão"
+      },
+      {
+        "exame": "ECG de 12 derivações seriado",
+        "status": "concluído",
+        "solicitado_em": "10/08/2026",
+        "resultado": "Ritmo sinusal, infradesnivelamento de ST de 0,5 mm em V4-V6"
+      },
+      {
+        "exame": "Troponina ultrassensível (0h e 3h)",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Eletrólitos, função renal e coagulograma",
+        "status": "pendente",
+        "solicitado_em": "19/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "AAS",
+        "dose": "100 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      },
+      {
+        "medicamento": "atorvastatina",
+        "dose": "80 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      }
+    ],
+    "medico_assistente": "Dra. Cláudia Ferreira Bittencourt",
+    "crm_assistente": "CRM-SP 110.365"
+  },
+  {
+    "paciente_id": "PRT-2026-101507",
+    "nome": "Luciana Dantas Souza",
+    "cpf": "271.937.452-87",
+    "cns": "912 4190 4966 3193",
+    "rg": "16.813.891-4",
+    "nascimento": "28/11/1970",
+    "idade": 56,
+    "sexo": "F",
+    "telefone": "(11) 92983-1672",
+    "email": "luciana.dantas@exemplo.com.br",
+    "endereco": "Rua Domingos Ferreira, nº 1111",
+    "cep": "08018-777",
+    "convenio": "Convênio SaúdeMax",
+    "setor": "Unidade de Terapia Intensiva",
+    "leito": "U-05",
+    "admissao": "23/08/2026",
+    "queixa": "vômitos, poliúria e sonolência há 2 dias",
+    "condicao": "Cetoacidose diabética",
+    "protocolo": "PROT-END-004",
+    "alergias": [
+      "dipirona",
+      "iodo"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "insuficiência cardíaca"
+    ],
+    "sinais_vitais": {
+      "PA": "104/62 mmHg",
+      "FC": 112,
+      "FR": 28,
+      "Temp": 36.8,
+      "SpO2": 97
+    },
+    "escores": {
+      "glicemia": 412,
+      "pH": 7.18,
+      "K": 3.1
+    },
+    "exames": [
+      {
+        "exame": "Função renal e hemograma",
+        "status": "concluído",
+        "solicitado_em": "17/08/2026",
+        "resultado": "Creatinina 1,3 mg/dL; leucócitos 15.900/mm³"
+      },
+      {
+        "exame": "Cetonemia ou cetonúria",
+        "status": "pendente",
+        "solicitado_em": "16/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Eletrólitos (Na, K, Cl) a cada 4 horas",
+        "status": "pendente",
+        "solicitado_em": "10/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Gasometria arterial ou venosa",
+        "status": "pendente",
+        "solicitado_em": "14/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Glicemia capilar horária",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "insulina regular",
+        "dose": "0,1 U/kg/h",
+        "via": "EV",
+        "frequencia": "bomba de infusão",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      },
+      {
+        "medicamento": "cloreto de potássio",
+        "dose": "20 mEq",
+        "via": "EV",
+        "frequencia": "conforme controle",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      }
+    ],
+    "medico_assistente": "Dr. Paulo Sérgio Andrade Lima",
+    "crm_assistente": "CRM-SP 87.209"
+  },
+  {
+    "paciente_id": "PRT-2026-101644",
+    "nome": "Lucas Correia Almeida",
+    "cpf": "473.799.650-73",
+    "cns": "527 3545 4948 0831",
+    "rg": "25.837.516-7",
+    "nascimento": "18/04/1965",
+    "idade": 61,
+    "sexo": "M",
+    "telefone": "(11) 98800-9041",
+    "email": "lucas.correia@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 1643",
+    "cep": "01282-195",
+    "convenio": "Convênio SaúdeMax",
+    "setor": "Emergência",
+    "leito": "E-15",
+    "admissao": "21/08/2026",
+    "queixa": "hemiparesia à direita e disartria com início há 1h40",
+    "condicao": "AVC isquêmico agudo em janela terapêutica",
+    "protocolo": "PROT-NEU-005",
+    "alergias": [
+      "sulfa"
+    ],
+    "comorbidades": [
+      "doença renal crônica estágio 3",
+      "asma",
+      "tabagismo (20 maços-ano)"
+    ],
+    "sinais_vitais": {
+      "PA": "176/98 mmHg",
+      "FC": 84,
+      "FR": 18,
+      "Temp": 36.5,
+      "SpO2": 97
+    },
+    "escores": {
+      "NIHSS": 8,
+      "tempo_sintomas_h": 1.7
+    },
+    "exames": [
+      {
+        "exame": "Tomografia de crânio sem contraste",
+        "status": "concluído",
+        "solicitado_em": "23/08/2026",
+        "resultado": "Sem sinais de hemorragia; ASPECTS 9"
+      },
+      {
+        "exame": "Angiotomografia de crânio e vasos cervicais quando indicada trombectomia",
+        "status": "concluído",
+        "solicitado_em": "18/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "ECG e troponina",
+        "status": "pendente",
+        "solicitado_em": "20/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Coagulograma e plaquetas",
+        "status": "pendente",
+        "solicitado_em": "17/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Glicemia capilar imediata",
+        "status": "pendente",
+        "solicitado_em": "12/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enalapril",
+        "dose": "5 mg",
+        "via": "VO",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dra. Marina Okamoto Ribeiro"
+      }
+    ],
+    "medico_assistente": "Dra. Marina Okamoto Ribeiro",
+    "crm_assistente": "CRM-SP 123.774"
+  },
+  {
+    "paciente_id": "PRT-2026-101781",
+    "nome": "Thiago Dantas Teixeira",
+    "cpf": "182.337.498-86",
+    "cns": "413 4352 4082 4008",
+    "rg": "28.814.229-7",
+    "nascimento": "04/01/1970",
+    "idade": 56,
+    "sexo": "M",
+    "telefone": "(11) 95658-8690",
+    "email": "thiago.dantas@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 922",
+    "cep": "06582-288",
+    "convenio": "SUS",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-17",
+    "admissao": "28/08/2026",
+    "queixa": "tosse produtiva, febre e dor pleurítica há 4 dias",
+    "condicao": "Pneumonia adquirida na comunidade",
+    "protocolo": "PROT-PNE-006",
+    "alergias": [
+      "dipirona",
+      "nenhuma conhecida"
+    ],
+    "comorbidades": [
+      "asma",
+      "diabetes mellitus tipo 2"
+    ],
+    "sinais_vitais": {
+      "PA": "118/70 mmHg",
+      "FC": 98,
+      "FR": 24,
+      "Temp": 38.4,
+      "SpO2": 92
+    },
+    "escores": {
+      "CURB-65": 2
+    },
+    "exames": [
+      {
+        "exame": "Radiografia de tórax PA e perfil",
+        "status": "concluído",
+        "solicitado_em": "17/08/2026",
+        "resultado": "Consolidação em lobo inferior direito"
+      },
+      {
+        "exame": "Saturação de oxigênio ou gasometria",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "SpO2 92% em ar ambiente"
+      },
+      {
+        "exame": "Hemograma, ureia e creatinina",
+        "status": "pendente",
+        "solicitado_em": "16/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Hemocultura e cultura de escarro nos internados",
+        "status": "pendente",
+        "solicitado_em": "20/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "ceftriaxona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      },
+      {
+        "medicamento": "azitromicina",
+        "dose": "500 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      }
+    ],
+    "medico_assistente": "Dr. Anderson Luiz Carvalho",
+    "crm_assistente": "CRM-SP 76.518"
+  },
+  {
+    "paciente_id": "PRT-2026-101918",
+    "nome": "Juliana Almeida Machado",
+    "cpf": "496.499.091-36",
+    "cns": "341 2328 1206 7974",
+    "rg": "12.337.395-4",
+    "nascimento": "23/08/1987",
+    "idade": 39,
+    "sexo": "F",
+    "telefone": "(11) 92166-4824",
+    "email": "juliana.almeida@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 1633",
+    "cep": "04241-535",
+    "convenio": "SUS",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-35",
+    "admissao": "18/08/2026",
+    "queixa": "edema e dor em panturrilha esquerda há 3 dias",
+    "condicao": "Suspeita de trombose venosa profunda em membro inferior esquerdo",
+    "protocolo": "PROT-HEM-007",
+    "alergias": [
+      "sulfa"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2"
+    ],
+    "sinais_vitais": {
+      "PA": "132/84 mmHg",
+      "FC": 88,
+      "FR": 18,
+      "Temp": 37.1,
+      "SpO2": 96
+    },
+    "escores": {
+      "Wells": 3,
+      "Padua": 5
+    },
+    "exames": [
+      {
+        "exame": "Angiotomografia de tórax na suspeita de embolia pulmonar",
+        "status": "concluído",
+        "solicitado_em": "26/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Hemograma, creatinina e coagulograma",
+        "status": "pendente",
+        "solicitado_em": "22/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "D-dímero quando probabilidade pré-teste baixa ou intermediária",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Ultrassom Doppler de membros inferiores",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enoxaparina",
+        "dose": "40 mg",
+        "via": "SC",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Beatriz Nogueira Salles"
+      }
+    ],
+    "medico_assistente": "Dra. Beatriz Nogueira Salles",
+    "crm_assistente": "CRM-SP 134.902"
+  },
+  {
+    "paciente_id": "PRT-2026-102055",
+    "nome": "Juliana Machado Machado",
+    "cpf": "877.190.659-42",
+    "cns": "013 9904 9027 8742",
+    "rg": "47.546.750-7",
+    "nascimento": "03/08/1964",
+    "idade": 62,
+    "sexo": "F",
+    "telefone": "(11) 96700-7690",
+    "email": "juliana.machado@exemplo.com.br",
+    "endereco": "Rua Domingos Ferreira, nº 677",
+    "cep": "02713-978",
+    "convenio": "Convênio Vida+",
+    "setor": "Enfermaria Cirúrgica",
+    "leito": "E-22",
+    "admissao": "21/08/2026",
+    "queixa": "secreção purulenta em ferida operatória e febre no 5º dia pós-operatório",
+    "condicao": "Infecção de sítio cirúrgico em uso de antimicrobiano restrito",
+    "protocolo": "PROT-INF-008",
+    "alergias": [
+      "sulfa",
+      "iodo"
+    ],
+    "comorbidades": [
+      "hipertensão arterial",
+      "asma",
+      "nenhuma"
+    ],
+    "sinais_vitais": {
+      "PA": "126/78 mmHg",
+      "FC": 92,
+      "FR": 18,
+      "Temp": 38.2,
+      "SpO2": 95
+    },
+    "escores": {
+      "dias_antibiotico": 8
+    },
+    "exames": [
+      {
+        "exame": "Função renal para ajuste de dose",
+        "status": "concluído",
+        "solicitado_em": "22/08/2026",
+        "resultado": "Creatinina 0,9 mg/dL; ClCr 88 mL/min"
+      },
+      {
+        "exame": "Hemograma e PCR seriados",
+        "status": "pendente",
+        "solicitado_em": "18/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Culturas do sítio suspeito antes do início da terapia",
+        "status": "pendente",
+        "solicitado_em": "26/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "meropenem",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "8/8h",
+        "prescrito_por": "Dr. Fernando Kazuo Watanabe"
+      }
+    ],
+    "medico_assistente": "Dr. Fernando Kazuo Watanabe",
+    "crm_assistente": "CRM-SP 65.130"
+  },
+  {
+    "paciente_id": "PRT-2026-102192",
+    "nome": "Larissa Cardoso Teixeira",
+    "cpf": "703.482.477-25",
+    "cns": "093 2480 8613 1712",
+    "rg": "41.833.398-8",
+    "nascimento": "23/05/1985",
+    "idade": 41,
+    "sexo": "F",
+    "telefone": "(11) 97807-8905",
+    "email": "larissa.cardoso@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 519",
+    "cep": "08483-664",
+    "convenio": "Convênio Vida+",
+    "setor": "Ambulatório de Mastologia",
+    "leito": "A-25",
+    "admissao": "18/08/2026",
+    "queixa": "nódulo mamário palpável há 2 meses",
+    "condicao": "Nódulo mamário BI-RADS 4 em quadrante superior externo à direita",
+    "protocolo": "PROT-ONC-001",
+    "alergias": [
+      "dipirona"
+    ],
+    "comorbidades": [
+      "insuficiência cardíaca",
+      "doença renal crônica estágio 3"
+    ],
+    "sinais_vitais": {
+      "PA": "128/82 mmHg",
+      "FC": 78,
+      "FR": 16,
+      "Temp": 36.4,
+      "SpO2": 98
+    },
+    "escores": {
+      "BI-RADS": 4
+    },
+    "exames": [
+      {
+        "exame": "Hemograma completo, função hepática e renal",
+        "status": "concluído",
+        "solicitado_em": "11/08/2026",
+        "resultado": "Hb 11,8 g/dL; leucócitos 14.200/mm³; creatinina 1,1 mg/dL"
+      },
+      {
+        "exame": "Ultrassonografia mamária e axilar",
+        "status": "concluído",
+        "solicitado_em": "16/08/2026",
+        "resultado": "Nódulo sólido hipoecogênico de 1,7 cm; axila sem linfonodomegalia"
+      },
+      {
+        "exame": "Core biopsy com laudo anatomopatológico",
+        "status": "pendente",
+        "solicitado_em": "26/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Mamografia digital bilateral (até 12 meses)",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Imuno-histoquímica (RE, RP, HER2, Ki-67)",
+        "status": "pendente",
+        "solicitado_em": "25/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "dipirona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "se dor",
+        "prescrito_por": "Dra. Helena Vasconcelos Prado"
+      }
+    ],
+    "medico_assistente": "Dra. Helena Vasconcelos Prado",
+    "crm_assistente": "CRM-SP 142.887"
+  },
+  {
+    "paciente_id": "PRT-2026-102329",
+    "nome": "Sérgio Silva Machado",
+    "cpf": "675.339.636-15",
+    "cns": "576 6270 2895 1718",
+    "rg": "39.115.839-2",
+    "nascimento": "14/11/1946",
+    "idade": 80,
+    "sexo": "M",
+    "telefone": "(11) 93529-2225",
+    "email": "sérgio.silva@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 1620",
+    "cep": "05342-446",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-06",
+    "admissao": "28/08/2026",
+    "queixa": "febre, dispneia e confusão mental há 12 horas",
+    "condicao": "Sepse de foco pulmonar",
+    "protocolo": "PROT-EME-002",
+    "alergias": [
+      "nenhuma conhecida",
+      "látex"
+    ],
+    "comorbidades": [
+      "doença renal crônica estágio 3",
+      "asma"
+    ],
+    "sinais_vitais": {
+      "PA": "92/54 mmHg",
+      "FC": 118,
+      "FR": 26,
+      "Temp": 38.9,
+      "SpO2": 91
+    },
+    "escores": {
+      "qSOFA": 2,
+      "lactato": 3.8
+    },
+    "exames": [
+      {
+        "exame": "Cultura do foco suspeito (urina, secreção, líquor)",
+        "status": "concluído",
+        "solicitado_em": "25/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Lactato arterial seriado",
+        "status": "concluído",
+        "solicitado_em": "21/08/2026",
+        "resultado": "Lactato 3,8 mmol/L (coleta inicial)"
+      },
+      {
+        "exame": "Duas hemoculturas (pré-antibiótico)",
+        "status": "concluído",
+        "solicitado_em": "20/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Gasometria arterial",
+        "status": "pendente",
+        "solicitado_em": "27/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Hemograma, PCR, creatinina, bilirrubinas",
+        "status": "pendente",
+        "solicitado_em": "27/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "piperacilina-tazobactam",
+        "dose": "4,5 g",
+        "via": "EV",
+        "frequencia": "6/6h",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      },
+      {
+        "medicamento": "noradrenalina",
+        "dose": "0,1 mcg/kg/min",
+        "via": "EV",
+        "frequencia": "contínuo",
+        "prescrito_por": "Dr. Ricardo Menezes Tavares"
+      }
+    ],
+    "medico_assistente": "Dr. Ricardo Menezes Tavares",
+    "crm_assistente": "CRM-SP 98.442"
+  },
+  {
+    "paciente_id": "PRT-2026-102466",
+    "nome": "Tatiana Oliveira Rocha",
+    "cpf": "400.504.556-28",
+    "cns": "386 9222 1969 3792",
+    "rg": "24.572.753-4",
+    "nascimento": "15/05/1952",
+    "idade": 74,
+    "sexo": "F",
+    "telefone": "(11) 91153-8622",
+    "email": "tatiana.oliveira@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 1407",
+    "cep": "09955-261",
+    "convenio": "SUS",
+    "setor": "Emergência",
+    "leito": "E-29",
+    "admissao": "20/08/2026",
+    "queixa": "dor retroesternal em aperto há 40 minutos, com irradiação para o braço esquerdo",
+    "condicao": "Dor torácica típica em investigação para síndrome coronariana aguda",
+    "protocolo": "PROT-CAR-003",
+    "alergias": [
+      "nenhuma conhecida",
+      "iodo"
+    ],
+    "comorbidades": [
+      "tabagismo (20 maços-ano)",
+      "asma",
+      "insuficiência cardíaca"
+    ],
+    "sinais_vitais": {
+      "PA": "148/92 mmHg",
+      "FC": 96,
+      "FR": 20,
+      "Temp": 36.6,
+      "SpO2": 96
+    },
+    "escores": {
+      "HEART": 5
+    },
+    "exames": [
+      {
+        "exame": "Troponina ultrassensível (0h e 3h)",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Eletrólitos, função renal e coagulograma",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "Na 138; K 4,1; INR 1,0"
+      },
+      {
+        "exame": "ECG de 12 derivações seriado",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Radiografia de tórax",
+        "status": "pendente",
+        "solicitado_em": "15/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "AAS",
+        "dose": "100 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      },
+      {
+        "medicamento": "atorvastatina",
+        "dose": "80 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Cláudia Ferreira Bittencourt"
+      }
+    ],
+    "medico_assistente": "Dra. Cláudia Ferreira Bittencourt",
+    "crm_assistente": "CRM-SP 110.365"
+  },
+  {
+    "paciente_id": "PRT-2026-102603",
+    "nome": "Bruno Batista Azevedo",
+    "cpf": "090.974.395-38",
+    "cns": "394 2104 7095 2145",
+    "rg": "36.279.305-2",
+    "nascimento": "26/09/1986",
+    "idade": 40,
+    "sexo": "M",
+    "telefone": "(11) 96994-9697",
+    "email": "bruno.batista@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 1720",
+    "cep": "03695-363",
+    "convenio": "Particular",
+    "setor": "Unidade de Terapia Intensiva",
+    "leito": "U-19",
+    "admissao": "26/08/2026",
+    "queixa": "vômitos, poliúria e sonolência há 2 dias",
+    "condicao": "Cetoacidose diabética",
+    "protocolo": "PROT-END-004",
+    "alergias": [
+      "dipirona",
+      "iodo"
+    ],
+    "comorbidades": [
+      "dislipidemia"
+    ],
+    "sinais_vitais": {
+      "PA": "104/62 mmHg",
+      "FC": 112,
+      "FR": 28,
+      "Temp": 36.8,
+      "SpO2": 97
+    },
+    "escores": {
+      "glicemia": 412,
+      "pH": 7.18,
+      "K": 3.1
+    },
+    "exames": [
+      {
+        "exame": "Gasometria arterial ou venosa",
+        "status": "concluído",
+        "solicitado_em": "19/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Função renal e hemograma",
+        "status": "concluído",
+        "solicitado_em": "19/08/2026",
+        "resultado": "Creatinina 1,3 mg/dL; leucócitos 15.900/mm³"
+      },
+      {
+        "exame": "Eletrólitos (Na, K, Cl) a cada 4 horas",
+        "status": "concluído",
+        "solicitado_em": "10/08/2026",
+        "resultado": "Na 134; K 3,1; Cl 102"
+      },
+      {
+        "exame": "Cetonemia ou cetonúria",
+        "status": "pendente",
+        "solicitado_em": "22/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Glicemia capilar horária",
+        "status": "pendente",
+        "solicitado_em": "18/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "insulina regular",
+        "dose": "0,1 U/kg/h",
+        "via": "EV",
+        "frequencia": "bomba de infusão",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      },
+      {
+        "medicamento": "cloreto de potássio",
+        "dose": "20 mEq",
+        "via": "EV",
+        "frequencia": "conforme controle",
+        "prescrito_por": "Dr. Paulo Sérgio Andrade Lima"
+      }
+    ],
+    "medico_assistente": "Dr. Paulo Sérgio Andrade Lima",
+    "crm_assistente": "CRM-SP 87.209"
+  },
+  {
+    "paciente_id": "PRT-2026-102740",
+    "nome": "Joana Batista Dantas",
+    "cpf": "513.709.859-38",
+    "cns": "174 6120 0471 1382",
+    "rg": "34.564.479-8",
+    "nascimento": "14/10/1969",
+    "idade": 57,
+    "sexo": "F",
+    "telefone": "(11) 93531-7797",
+    "email": "joana.batista@exemplo.com.br",
+    "endereco": "Avenida Brigadeiro Faria, nº 1727",
+    "cep": "09017-730",
+    "convenio": "Particular",
+    "setor": "Emergência",
+    "leito": "E-18",
+    "admissao": "15/08/2026",
+    "queixa": "hemiparesia à direita e disartria com início há 1h40",
+    "condicao": "AVC isquêmico agudo em janela terapêutica",
+    "protocolo": "PROT-NEU-005",
+    "alergias": [
+      "penicilina",
+      "iodo"
+    ],
+    "comorbidades": [
+      "obesidade grau I",
+      "doença renal crônica estágio 3"
+    ],
+    "sinais_vitais": {
+      "PA": "176/98 mmHg",
+      "FC": 84,
+      "FR": 18,
+      "Temp": 36.5,
+      "SpO2": 97
+    },
+    "escores": {
+      "NIHSS": 8,
+      "tempo_sintomas_h": 1.7
+    },
+    "exames": [
+      {
+        "exame": "Coagulograma e plaquetas",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "INR 1,0; plaquetas 233.000/mm³"
+      },
+      {
+        "exame": "Glicemia capilar imediata",
+        "status": "concluído",
+        "solicitado_em": "24/08/2026",
+        "resultado": "104 mg/dL"
+      },
+      {
+        "exame": "Angiotomografia de crânio e vasos cervicais quando indicada trombectomia",
+        "status": "concluído",
+        "solicitado_em": "21/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "ECG e troponina",
+        "status": "pendente",
+        "solicitado_em": "18/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Tomografia de crânio sem contraste",
+        "status": "pendente",
+        "solicitado_em": "22/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enalapril",
+        "dose": "5 mg",
+        "via": "VO",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dra. Marina Okamoto Ribeiro"
+      }
+    ],
+    "medico_assistente": "Dra. Marina Okamoto Ribeiro",
+    "crm_assistente": "CRM-SP 123.774"
+  },
+  {
+    "paciente_id": "PRT-2026-102877",
+    "nome": "Isabela Moreira Dantas",
+    "cpf": "390.053.293-18",
+    "cns": "839 3352 9042 2842",
+    "rg": "17.776.987-0",
+    "nascimento": "05/01/1951",
+    "idade": 75,
+    "sexo": "F",
+    "telefone": "(11) 96869-4898",
+    "email": "isabela.moreira@exemplo.com.br",
+    "endereco": "Rua Domingos Ferreira, nº 52",
+    "cep": "03854-371",
+    "convenio": "SUS",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-09",
+    "admissao": "26/08/2026",
+    "queixa": "tosse produtiva, febre e dor pleurítica há 4 dias",
+    "condicao": "Pneumonia adquirida na comunidade",
+    "protocolo": "PROT-PNE-006",
+    "alergias": [
+      "látex",
+      "dipirona"
+    ],
+    "comorbidades": [
+      "diabetes mellitus tipo 2",
+      "asma",
+      "obesidade grau I"
+    ],
+    "sinais_vitais": {
+      "PA": "118/70 mmHg",
+      "FC": 98,
+      "FR": 24,
+      "Temp": 38.4,
+      "SpO2": 92
+    },
+    "escores": {
+      "CURB-65": 2
+    },
+    "exames": [
+      {
+        "exame": "Hemocultura e cultura de escarro nos internados",
+        "status": "concluído",
+        "solicitado_em": "16/08/2026",
+        "resultado": "Dentro dos parâmetros de referência"
+      },
+      {
+        "exame": "Hemograma, ureia e creatinina",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "Hb 13,1 g/dL; ureia 48 mg/dL; creatinina 1,2 mg/dL"
+      },
+      {
+        "exame": "Radiografia de tórax PA e perfil",
+        "status": "pendente",
+        "solicitado_em": "24/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Saturação de oxigênio ou gasometria",
+        "status": "pendente",
+        "solicitado_em": "12/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "ceftriaxona",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "12/12h",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      },
+      {
+        "medicamento": "azitromicina",
+        "dose": "500 mg",
+        "via": "VO",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dr. Anderson Luiz Carvalho"
+      }
+    ],
+    "medico_assistente": "Dr. Anderson Luiz Carvalho",
+    "crm_assistente": "CRM-SP 76.518"
+  },
+  {
+    "paciente_id": "PRT-2026-103014",
+    "nome": "Rafael Pereira Correia",
+    "cpf": "661.771.159-28",
+    "cns": "124 9985 6984 7896",
+    "rg": "16.912.818-1",
+    "nascimento": "28/11/1960",
+    "idade": 66,
+    "sexo": "M",
+    "telefone": "(11) 94522-8046",
+    "email": "rafael.pereira@exemplo.com.br",
+    "endereco": "Rua Padre Estêvão, nº 487",
+    "cep": "07779-447",
+    "convenio": "Particular",
+    "setor": "Enfermaria de Clínica Médica",
+    "leito": "E-26",
+    "admissao": "21/08/2026",
+    "queixa": "edema e dor em panturrilha esquerda há 3 dias",
+    "condicao": "Suspeita de trombose venosa profunda em membro inferior esquerdo",
+    "protocolo": "PROT-HEM-007",
+    "alergias": [
+      "sulfa"
+    ],
+    "comorbidades": [
+      "doença renal crônica estágio 3",
+      "tabagismo (20 maços-ano)"
+    ],
+    "sinais_vitais": {
+      "PA": "132/84 mmHg",
+      "FC": 88,
+      "FR": 18,
+      "Temp": 37.1,
+      "SpO2": 96
+    },
+    "escores": {
+      "Wells": 3,
+      "Padua": 5
+    },
+    "exames": [
+      {
+        "exame": "Hemograma, creatinina e coagulograma",
+        "status": "concluído",
+        "solicitado_em": "24/08/2026",
+        "resultado": "Plaquetas 240.000/mm³; INR 1,1"
+      },
+      {
+        "exame": "D-dímero quando probabilidade pré-teste baixa ou intermediária",
+        "status": "concluído",
+        "solicitado_em": "10/08/2026",
+        "resultado": "1.840 ng/mL"
+      },
+      {
+        "exame": "Angiotomografia de tórax na suspeita de embolia pulmonar",
+        "status": "pendente",
+        "solicitado_em": "11/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Ultrassom Doppler de membros inferiores",
+        "status": "pendente",
+        "solicitado_em": "25/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "enoxaparina",
+        "dose": "40 mg",
+        "via": "SC",
+        "frequencia": "1x/dia",
+        "prescrito_por": "Dra. Beatriz Nogueira Salles"
+      }
+    ],
+    "medico_assistente": "Dra. Beatriz Nogueira Salles",
+    "crm_assistente": "CRM-SP 134.902"
+  },
+  {
+    "paciente_id": "PRT-2026-103151",
+    "nome": "Marcos Azevedo Oliveira",
+    "cpf": "809.885.165-95",
+    "cns": "604 9451 9832 7315",
+    "rg": "45.476.217-4",
+    "nascimento": "19/04/1987",
+    "idade": 39,
+    "sexo": "M",
+    "telefone": "(11) 98030-1430",
+    "email": "marcos.azevedo@exemplo.com.br",
+    "endereco": "Travessa São Bento, nº 79",
+    "cep": "03955-379",
+    "convenio": "Convênio SaúdeMax",
+    "setor": "Enfermaria Cirúrgica",
+    "leito": "E-22",
+    "admissao": "20/08/2026",
+    "queixa": "secreção purulenta em ferida operatória e febre no 5º dia pós-operatório",
+    "condicao": "Infecção de sítio cirúrgico em uso de antimicrobiano restrito",
+    "protocolo": "PROT-INF-008",
+    "alergias": [
+      "penicilina"
+    ],
+    "comorbidades": [
+      "insuficiência cardíaca"
+    ],
+    "sinais_vitais": {
+      "PA": "126/78 mmHg",
+      "FC": 92,
+      "FR": 18,
+      "Temp": 38.2,
+      "SpO2": 95
+    },
+    "escores": {
+      "dias_antibiotico": 8
+    },
+    "exames": [
+      {
+        "exame": "Hemograma e PCR seriados",
+        "status": "concluído",
+        "solicitado_em": "13/08/2026",
+        "resultado": "Leucócitos 12.100/mm³; PCR 96 mg/L"
+      },
+      {
+        "exame": "Função renal para ajuste de dose",
+        "status": "pendente",
+        "solicitado_em": "21/08/2026",
+        "resultado": null
+      },
+      {
+        "exame": "Culturas do sítio suspeito antes do início da terapia",
+        "status": "pendente",
+        "solicitado_em": "14/08/2026",
+        "resultado": null
+      }
+    ],
+    "medicacoes": [
+      {
+        "medicamento": "meropenem",
+        "dose": "1 g",
+        "via": "EV",
+        "frequencia": "8/8h",
+        "prescrito_por": "Dr. Fernando Kazuo Watanabe"
+      }
+    ],
+    "medico_assistente": "Dr. Fernando Kazuo Watanabe",
+    "crm_assistente": "CRM-SP 65.130"
+  }
+]

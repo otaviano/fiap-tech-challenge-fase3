@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "med-assist"
+version = "0.1.0"
+description = "Assistente médico virtual com LLM fine-tunada, LangChain e LangGraph (Tech Challenge Fase 3 — FIAP Postech)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Grupo Tech Challenge - FIAP Postech IA para Devs" }]
+dependencies = [
+    "langchain>=1.0",
+    "langchain-core>=1.0",
+    "langchain-openai>=1.0",
+    "langchain-community>=0.4",
+    "langgraph>=1.0",
+    "pydantic>=2.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+serving = ["fastapi>=0.115", "uvicorn>=0.30"]
+finetune = ["torch>=2.2", "transformers>=4.44", "peft>=0.12", "datasets>=2.20", "accelerate>=0.33"]
+dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "jupyter>=1.0.0", "ipykernel>=6.0.0"]
+
+[project.scripts]
+med-assist = "med_assist.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["med_assist"]
