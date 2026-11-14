@@ -1,5 +1,7 @@
 """Base de conhecimento: recuperação de protocolo e prontuário estruturado."""
 
+from collections import Counter
+
 import pytest
 
 from med_assist.knowledge import ehr
@@ -60,7 +62,26 @@ def test_exames_pendentes_sao_a_diferenca_do_protocolo(db):
     assert pendencias["conforme"] == (not pendencias["pendentes"] and not pendencias["nao_solicitados"])
 
 
-def test_busca_por_leito_ou_nome(db):
-    paciente = ehr.get_patient(ehr.list_patients()[0]["paciente_id"])
+def test_busca_por_leito_unico(db):
+    pacientes = ehr.list_patients()
+    contagem = Counter(p["leito"] for p in pacientes)
+    paciente = next(p for p in pacientes if contagem[p["leito"]] == 1)
     assert ehr.get_patient(paciente["leito"])["paciente_id"] == paciente["paciente_id"]
+    assert ehr.get_patient(paciente["paciente_id"].lower())["paciente_id"] == paciente["paciente_id"]
     assert ehr.get_patient("inexistente-999") is None
+
+
+def test_leito_compartilhado_nao_escolhe_paciente(db):
+    """Leito ocupado por mais de um registro é ambíguo: não pode virar o primeiro da fila."""
+    contagem = Counter(p["leito"] for p in ehr.list_patients())
+    ambiguos = [leito for leito, n in contagem.items() if n > 1]
+    assert ambiguos, "o seed tem leitos repetidos (ex.: E-24); o teste depende disso"
+    for leito in ambiguos:
+        assert ehr.get_patient(leito) is None
+
+
+@pytest.mark.parametrize("entrada", ["a", "Maria", "PRT", "", "   ", "x' OR 1=1"])
+def test_id_parcial_ou_nome_nao_devolve_paciente(db, entrada):
+    """Id errado tem de dar "não encontrado" — nunca o contexto de outro paciente."""
+    assert ehr.get_patient(entrada) is None
+    assert ehr.clinical_context(entrada) is None

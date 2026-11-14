@@ -15,7 +15,9 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator
 
 from ..config import EHR_DB, RAW_DIR
 from ..data.protocol_source import PROTOCOLOS_POR_CODIGO
@@ -77,12 +79,27 @@ def connect(db_path: Path = EHR_DB) -> sqlite3.Connection:
     return conn
 
 
+@contextmanager
+def _sessao(db_path: Path = EHR_DB) -> Iterator[sqlite3.Connection]:
+    """Conexão com commit/rollback **e** fechamento garantido.
+
+    `with sqlite3.connect(...)` sozinho só controla a transação — a conexão
+    continua aberta até o coletor de lixo passar (daí os `ResourceWarning`).
+    """
+    conn = connect(db_path)
+    try:
+        with conn:
+            yield conn
+    finally:
+        conn.close()
+
+
 def seed(db_path: Path = EHR_DB, pacientes_json: Path | None = None) -> int:
     """(Re)cria o banco a partir do JSON de pacientes sintéticos."""
     pacientes_json = pacientes_json or (RAW_DIR / "pacientes.json")
     pacientes = json.loads(pacientes_json.read_text(encoding="utf-8"))
 
-    with connect(db_path) as conn:
+    with _sessao(db_path) as conn:
         conn.executescript(SCHEMA)
         conn.execute("DELETE FROM exames")
         conn.execute("DELETE FROM medicacoes")
@@ -128,7 +145,7 @@ def _row_to_patient(row: sqlite3.Row) -> dict:
 
 def list_patients(db_path: Path = EHR_DB, setor: str | None = None) -> list[dict]:
     ensure_seeded(db_path)
-    with connect(db_path) as conn:
+    with _sessao(db_path) as conn:
         if setor:
             rows = conn.execute(
                 "SELECT paciente_id, nome, idade, sexo, setor, leito, condicao, protocolo "
@@ -141,14 +158,24 @@ def list_patients(db_path: Path = EHR_DB, setor: str | None = None) -> list[dict
 
 
 def get_patient(paciente_id: str, db_path: Path = EHR_DB) -> dict | None:
-    """Registro completo, incluindo exames e medicações. Uso interno."""
+    """Registro completo, incluindo exames e medicações. Uso interno.
+
+    A identificação é **exata**: número do prontuário ou, como atalho, o leito —
+    este só quando um único paciente o ocupa. Nunca há busca aproximada: um id
+    digitado errado tem de dar "não encontrado", não o contexto, os alertas e as
+    notificações de outro paciente. (A versão anterior caía num `nome LIKE`, e
+    `"a"` devolvia o primeiro prontuário da base; leitos como E-24 aparecem em
+    mais de um registro, e o primeiro vencia em silêncio.)
+    """
     ensure_seeded(db_path)
-    with connect(db_path) as conn:
-        row = conn.execute("SELECT * FROM pacientes WHERE paciente_id = ?", (paciente_id,)).fetchone()
+    chave = (paciente_id or "").strip().upper()
+    if not chave:
+        return None
+    with _sessao(db_path) as conn:
+        row = conn.execute("SELECT * FROM pacientes WHERE paciente_id = ?", (chave,)).fetchone()
         if row is None:
-            row = conn.execute(
-                "SELECT * FROM pacientes WHERE leito = ? OR nome LIKE ?",
-                (paciente_id, f"%{paciente_id}%")).fetchone()
+            por_leito = conn.execute("SELECT * FROM pacientes WHERE leito = ?", (chave,)).fetchall()
+            row = por_leito[0] if len(por_leito) == 1 else None
         if row is None:
             return None
         paciente = _row_to_patient(row)

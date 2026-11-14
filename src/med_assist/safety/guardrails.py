@@ -31,11 +31,19 @@ from ..persona import DISCLAIMER
 #: (motivo, padrão). Os padrões miram o *ato* pedido, não o assunto: falar sobre
 #: prescrição é legítimo; pedir que o assistente prescreva, não.
 PADROES_ATO_MEDICO: tuple[tuple[str, re.Pattern[str]], ...] = (
+    # Só o *pedido*: imperativo ("prescreva", "receite") ou solicitação ("pode
+    # prescrever?", "faz a receita"). "O protocolo prescreve…" e "modelo de
+    # receita" são perguntas sobre conteúdo e passam.
     ("prescricao_direta", re.compile(
-        r"\b(prescrev[ae]|prescrever|receit[ae]|me\s+d[êe]\s+a\s+(dose|receita)|"
+        r"\b(prescreva|receite|"
+        r"prescreve\s+(a[íi]|logo|agora|pra\s+mim|para\s+mim)|"
+        r"(pode|podes|poderia|consegue|voc[êe])\s+(me\s+)?(prescrever|receitar)|"
+        r"(fa[çz]a?|escrev[ae]|ger[ae]|emit[ae]|redij[ae])\s+(a|uma)\s+(receita|prescri[çc][ãa]o)|"
+        r"me\s+d[êe]\s+a\s+(dose|receita)|"
         r"passa\s+a\s+medica[çc][ãa]o|manda\s+a\s+prescri[çc][ãa]o)\b", re.I)),
     ("dose_para_administracao", re.compile(
-        r"\b(dose\s+(exata|certa)|quanto\s+(devo|posso)\s+(dar|aplicar|administrar)|"
+        r"\b((dose|posologia)\s+(exata|certa)|quanto\s+(devo|posso)\s+(dar|aplicar|administrar)|"
+        r"(me\s+)?(fala|fale|diga|diz|passa|passe|informa|informe)\s+a\s+(dose|posologia)|"
         r"aplic(o|ar)\s+agora|posso\s+dar\s+\d)", re.I)),
     ("assinatura_de_documento", re.compile(
         r"\b(assin[ae]r?\s+(o\s+)?(laudo|receita|atestado|documento)|emit[ae]\s+(um\s+)?atestado|"
@@ -95,6 +103,13 @@ PADRAO_FORA_DE_ESCOPO = re.compile(
     r"\b(meu\s+sobrinho|minha\s+m[ãa]e|pra\s+mim\s+mesmo|estou\s+sentindo|eu\s+sinto|"
     r"minha\s+dor\s+de\s+cabe[çc]a|rem[ée]dio\s+eu\s+tomo)\b", re.I)
 
+#: Fala do paciente reproduzida pelo profissional ("a paciente relata: estou
+#: sentindo…", ou entre aspas). É anamnese, não caso pessoal de quem pergunta.
+PADRAO_FALA_RELATADA = re.compile(
+    r"\b(relat(a|ou|ando)|refer(e|iu|indo)|queix(a|ou)(-se)?|afirm(a|ou)|diz|disse|cont(a|ou))\b"
+    r"(\s+que)?\s*:?[^.?!\n]*"
+    r"|[\"“][^\"”]*[\"”]", re.I)
+
 RESPOSTA_FORA_DE_ESCOPO = (
     "Atendo apenas profissionais do corpo clínico, no contexto assistencial do hospital, e não oriento "
     "casos pessoais nem automedicação. Para queixas próprias ou de familiares, procure atendimento médico."
@@ -124,7 +139,7 @@ def check_input(pergunta: str) -> GuardrailVerdict:
             motivos.append(motivo)
             resposta = resposta or RESPOSTAS_PADRAO[motivo]
 
-    if PADRAO_FORA_DE_ESCOPO.search(pergunta):
+    if PADRAO_FORA_DE_ESCOPO.search(PADRAO_FALA_RELATADA.sub(" ", pergunta)):
         motivos.append("fora_de_escopo")
         resposta = resposta or RESPOSTA_FORA_DE_ESCOPO
 

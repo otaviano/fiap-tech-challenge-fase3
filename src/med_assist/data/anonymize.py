@@ -55,8 +55,17 @@ PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     # `[ \t]+` em vez de `\s+`: o nome tem de estar na MESMA linha do título.
     # Com `\s+`, "paciente" no fim de um parágrafo casava com a primeira palavra
     # capitalizada do parágrafo seguinte e bloqueava resposta legítima.
+    # O lookahead exclui termos clínicos: "Paciente Idoso com sepse" ou um título
+    # "Paciente Crítico" não são nome — e, na checagem de saída, bloqueariam a
+    # resposta inteira como PII.
     ("NOME", re.compile(
         r"\b(?:Dr\.|Dra\.|Sr\.|Sra\.|paciente|Paciente)[ \t]+"
+        r"(?!(?:Idos[oa]|Jovem|Adult[oa]|Masculino|Feminino|Homem|Mulher|Gestante|Puérpera|"
+        r"Pediátric[oa]|Neonat[oa]l?|Crític[oa]|Grave|Estável|Instável|Internad[oa]|"
+        r"Hospitalizad[oa]|Admitid[oa]|Diabétic[oa]|Hipertens[oa]|Cardiopata|Renal|Oncológic[oa]|"
+        r"Séptic[oa]|Obes[oa]|Alérgic[oa]|Portador[a]?|Imunossuprimid[oa]|Neutropênic[oa]|"
+        r"Com|Sem|Em|No|Na|De|Do|Da|Que|Sob|Apresenta|Refere|Relata|Evolui|Mantém|Deve|"
+        r"Precisa|Tem|Está|Segue|Aguarda)\b)"
         r"(?:[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+)"
         r"(?:[ \t]+(?:d[aeo]s?[ \t]+)?[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç]+){0,3}"
     )),
