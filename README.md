@@ -37,7 +37,7 @@ são sintéticos e autorais.
 | Relatório técnico | [RELATORIO_TECH_CHALLENGE_FASE3.md](RELATORIO_TECH_CHALLENGE_FASE3.md) |
 | Diagrama do fluxo | [`docs/arquitetura.md`](docs/arquitetura.md), [`docs/fluxo-langgraph.mmd`](docs/fluxo-langgraph.mmd) |
 | Avaliação do modelo e análise | [relatório §6](RELATORIO_TECH_CHALLENGE_FASE3.md) + [`results/eval/`](results/eval/) |
-| Testes automatizados | [`tests/`](tests/) — 84 testes |
+| Testes automatizados | [`tests/`](tests/) — 105 testes |
 
 ---
 

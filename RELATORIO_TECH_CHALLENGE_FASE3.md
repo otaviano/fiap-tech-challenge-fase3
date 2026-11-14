@@ -651,7 +651,7 @@ nenhum dos dois em tempo de execução. O único texto compartilhado entre trein
 inferência é a persona — de propósito, para que o modelo não seja treinado com um
 contrato e executado com outro.
 
-**84 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
+**105 testes automatizados**, cobrindo os dois gates de dados, a recuperação, o
 prontuário e a minimização, os guardrails nos dois sentidos, as regras de alerta,
 a trilha de auditoria, o fluxo LangGraph completo (com LLM falsa), a API e a
 máscara de labels do fine-tuning. A suíte roda sem GPU, sem rede e sem servidor de
@@ -678,7 +678,7 @@ pip install -r requirements-finetune.txt
 med-assist finetune train --epochs 2
 med-assist finetune evaluate --limit 12
 
-pytest -q                                          # 84 testes
+pytest -q                                          # 105 testes
 ```
 
 ---
