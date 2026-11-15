@@ -230,10 +230,14 @@ def no_validar_saida(estado: EstadoClinico) -> dict:
         trechos = estado.get("trechos", [])
         recuperados = {t["protocolo"] for t in trechos}
         mais_relevante = trechos[0]["protocolo"] if trechos else None
-        veredito.motivos.extend(
-            guardrails.check_citations(resposta_final, recuperados, mais_relevante))
-        veredito.motivos.extend(guardrails.check_hallucinated_context(
-            resposta_final, tem_paciente=bool(estado.get("contexto"))))
+        adicionais = guardrails.check_citations(resposta_final, recuperados, mais_relevante)
+        adicionais += guardrails.check_hallucinated_context(
+            resposta_final, tem_paciente=bool(estado.get("contexto")))
+        veredito.motivos.extend(adicionais)
+        # `check_output` já fixou a severidade sem ver estas verificações; uma
+        # citação divergente ou um paciente inventado não podem ficar como "info".
+        if adicionais and veredito.severidade == "info":
+            veredito.severidade = "aviso"
         resposta_final = resposta_final + "\n" + explicacao.render()
         evidencias = explicacao.as_list()
 

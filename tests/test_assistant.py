@@ -75,6 +75,23 @@ def test_fallback_responde_sem_servidor_de_llm(db, trilha, monkeypatch):
     assert "PROT-EME-002" in resposta.resposta
 
 
+def test_paciente_inventado_eleva_severidade_na_auditoria(db, trilha):
+    """Regressão: o modelo v5 escreveu "Paciente de 50 anos" numa consulta sem
+    prontuário; a trilha registrou o motivo certo com severidade "info"."""
+    from langchain_core.messages import AIMessage
+    from langchain_core.runnables import RunnableLambda
+
+    llm_alucina = RunnableLambda(lambda _: AIMessage(content=(
+        "Paciente de 50 anos com AVC isquêmico agudo. Fonte: PROT-NEU-005. "
+        "Exige validação do médico assistente.")))
+    resposta = MedicalAssistant(llm=llm_alucina).ask("Qual a janela de trombólise no AVC?")
+
+    assert "paciente_inexistente_na_resposta" in resposta.guardrail["motivos"]
+    assert resposta.guardrail["severidade"] == "aviso"
+    validada = [e for e in trilha.read(trace_id=resposta.trace_id) if e["evento"] == "saida_validada"]
+    assert validada[0]["severidade"] == "aviso"
+
+
 def test_diagrama_do_fluxo_reflete_o_grafo(assistente):
     mermaid = assistente.mermaid()
     for no in ("triagem", "contexto_paciente", "exames_pendentes", "avaliar_alertas",
