@@ -22,7 +22,7 @@ dependencies = [
 [project.optional-dependencies]
 serving = ["fastapi>=0.115", "uvicorn>=0.30"]
 finetune = ["torch>=2.2", "transformers>=4.44", "peft>=0.12", "datasets>=2.20", "accelerate>=0.33"]
-dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "jupyter>=1.0.0", "ipykernel>=6.0.0"]
+dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "jupyter>=1.0.0", "ipykernel>=6.0.0", "matplotlib>=3.8"]
 
 [project.scripts]
 med-assist = "med_assist.cli:main"
