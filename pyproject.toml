@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Assistente médico virtual com LLM fine-tunada, LangChain e LangGraph (Tech Challenge Fase 3 — FIAP Postech)"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{ name = "Grupo Tech Challenge - FIAP Postech IA para Devs" }]
+authors = [{ name = "Otaviano Zibetti" }, { name = "Felipe Squarizi" }]
 dependencies = [
     "langchain>=1.0",
     "langchain-core>=1.0",
