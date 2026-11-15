@@ -237,7 +237,6 @@ pytest --cov=med_assist
 - [Dataset: anonimização e curadoria](docs/dataset.md)
 - [Fine-tuning e avaliação](docs/fine-tuning.md)
 - [Segurança, privacidade e validação](docs/seguranca.md)
-- [Roteiro do vídeo](docs/roteiro-video.md)
 
 ---
 

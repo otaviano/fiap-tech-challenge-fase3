@@ -55,3 +55,6 @@ data/structured/*.db
 .DS_Store
 .idea/
 .vscode/
+
+# Material de gravação (local, não é entregável)
+docs/roteiro-video.md
