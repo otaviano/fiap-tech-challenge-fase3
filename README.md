@@ -3,6 +3,10 @@
 > **FIAP Postech — IA para Devs**
 > LLM fine-tunada com dados internos + LangChain + LangGraph
 
+**[▶ Vídeo de demonstração (≤ 15 min)](https://youtu.be/clQDJsVoSDc)** ·
+**[Documento de entrega (PDF)](ENTREGA_TECH_CHALLENGE_FASE3.pdf)** ·
+**[Relatório técnico](RELATORIO_TECH_CHALLENGE_FASE3.md)**
+
 Terceira fase de uma linha contínua: a [Fase 1](https://github.com/otaviano/fiap-tech-challenge-fase1)
 construiu o classificador de diagnóstico (câncer de mama, dataset Wisconsin); a
 [Fase 2](https://github.com/otaviano/fiap-tech-challenge-fase2) otimizou os
@@ -233,6 +237,7 @@ pytest --cov=med_assist
 ## Documentação
 
 - [Relatório técnico](RELATORIO_TECH_CHALLENGE_FASE3.md)
+- [Documento de entrega](docs/entrega-fase3.md) — links, checklist e mapeamento dos requisitos
 - [Arquitetura e fluxo LangGraph](docs/arquitetura.md)
 - [Dataset: anonimização e curadoria](docs/dataset.md)
 - [Fine-tuning e avaliação](docs/fine-tuning.md)

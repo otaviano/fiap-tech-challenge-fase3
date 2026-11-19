@@ -51,7 +51,7 @@ autoral, determinístico (semente fixa):
 | Fonte | Volume | Papel |
 |---|---|---|
 | Protocolos internos | 8 documentos, 40 seções | conteúdo clínico e base de recuperação |
-| FAQ do corpo clínico | 38 itens | registro de pergunta e resposta de plantão |
+| FAQ do corpo clínico | 47 itens (32 dúvidas + 15 pedidos de ato médico) | registro de pergunta e resposta de plantão |
 | Modelos de documento | 72 (laudo, receita, procedimento) | formato institucional |
 | Prontuários | 24 pacientes | base estruturada consultável |
 | MedQuAD (externo) | ~200 pares | conhecimento médico geral |
@@ -110,7 +110,7 @@ Se a anonimização decide o que *pode* entrar, a curadoria decide o que *deveri
 | Duplicata exata | hash da pergunta normalizada, ou `dedup_key` declarada | 8 |
 | Quase-duplicata | Jaccard ≥ 0,85 sobre shingles de 5 palavras | 0 |
 
-A `dedup_key` foi acrescentada depois: exemplos gerados por template (§6.2) têm
+A `dedup_key` foi acrescentada depois: exemplos gerados por template (§6.3) têm
 estrutura de pergunta idêntica de propósito, e o filtro por shingles descartava 25
 de 48 casos clínicos distintos como se fossem repetição. Quando o exemplo declara
 sua própria chave, vale a igualdade exata dela.
@@ -135,7 +135,8 @@ split estratificado por categoria:
 |---|---|---|
 | `protocolo_qa` | 120 | conteúdo dos protocolos, seção a seção, com fonte |
 | `conhecimento_geral` | 195 | registro de resposta clínica geral (MedQuAD, inglês) |
-| `consulta_contextualizada` | 43 | responder ao formato real do prompt de produção (§6.2) |
+| `consulta_contextualizada` | 43 | responder ao formato real do prompt de produção (§6.3) |
+| `consulta_geral` | 20 | responder ao prompt de produção sem prontuário (§6.6) |
 | `documento` | 24 | formato dos modelos institucionais |
 | `faq` | 20 | dúvidas de plantão ancoradas em protocolo |
 | `faq_contextualizada` | 12 | a mesma dúvida aplicada a um caso concreto |
@@ -276,7 +277,7 @@ servido, não a infraestrutura de inferência.
 **Parâmetros treináveis: 8.798.208 de 502.830.976 (1,75%).**
 
 Fine-tuning completo foi descartado por três razões práticas: não caberia em CPU,
-não traria ganho perceptível para um dataset de 365 exemplos, e produziria um
+não traria ganho perceptível para um dataset de 382 exemplos, e produziria um
 artefato de 1 GB onde o LoRA produz alguns MB — o que torna versionar, comparar e
 reverter trivial.
 
@@ -294,7 +295,7 @@ recebem label `-100`:
 labels = [IGNORE_INDEX] * len(tokens_do_prompt) + tokens_da_resposta
 ```
 
-Sem essa máscara, o system prompt — longo e repetido em todos os 365 exemplos —
+Sem essa máscara, o system prompt — longo e repetido em todos os 382 exemplos —
 dominaria o sinal de treino, e o modelo gastaria capacidade decorando o próprio
 enunciado. O teste `test_loss_so_incide_sobre_a_resposta` verifica que os tokens
 supervisionados correspondem exatamente ao sufixo da sequência.
